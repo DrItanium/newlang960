@@ -1,0 +1,325 @@
+The set of types in the i960 is:
+
+Byte Ordinal, (ldob, stob)
+Byte Integer, (ldib, stib)
+Short Ordinal, (ldos, stos)
+Short Integer, (ldis, stis)
+Ordinal, (ld, st)
+Integer, (treat as ordinal for load/store)
+Long Ordinal, (ldl, stl)
+Long Integer, (treat as long ordinal for load/store)
+Triple Ordinal, (ldt, stt)
+Quad Ordinal, (ldq, stq)
+Real, (ld, st)
+Long Real,  (treat as long ordinal for load/store)
+Extended Real, (treat as triple ordinal for load/store)
+Word,
+Long,
+Triple,
+Quad,
+Literal (0-31)
+Address (32-bit word)
+
+
+// core storage types are as follows:
+
+	Integers (8, 16, 32, and 64 bits)
+	Ordinals (8, 16, 32, and 64 bits)
+	Reals (32, 64, and 80 bits)
+	Bit Field (Start and Length)
+	Decimal (Ascii Digits)
+	Triple Word (96 bits)
+	Quad Word (128 bits)
+
+// Numeric data types
+	Integers
+	Ordinals
+	Reals,
+	Decimals
+
+// Bit groupings where sign doesn't matter and data is viewed as quantities of
+// bits
+	Bit,
+	BitField,
+	Triple Word,
+	Quad Word,
+
+Integers are signed numbers and have the following kinds:
+
+	Byte Integer -> 8-bit
+	Short Integer -> 16-bit
+	Integer -> 32-bit
+	Long Integer -> 64-bit
+
+Ordinals are unsigned or the general purpose data type. If you don't care about
+the sign and/or the bits then ordinals are what you want to use
+
+	Byte Ordinal -> 8-bit
+	Short Ordinal -> 16-bit
+	Ordinal -> 32-bit
+	Long Ordinal -> 64-bit
+
+The class of reals are IEEE754 compliant floating point numbers of different
+widths.
+
+	Real -> 32-bit floating point (equivalent to float in C/C++)
+	Long Real -> 64-bit floating point (equivalent to double in C/C++)
+	Extended Real -> 80-bit floating point (equivalent to long double in C/C++ on x86; not IEEE754 compliant)
+
+
+A bit is a a 5-bit quantity that denotes the index of an individual bit within
+an Ordinal. The i960 provides some operations to work on these values.
+
+A bit field is a representation of a contiguous set of bits from 0 to 32-bits
+in length within a 32-bit ordinal. It is defined by giving the length in bits
+and the bit number of the lowest-numbered bit. Bit fields cannot span register
+boundaries.
+
+Decimals are a special extension for working with ascii numbers directly. A
+decimal is 8-bits in length of the form 0b0011dddd where dddd is a binary-coded
+decimal value from 0 to 9. For decimal operations, bits 8 through 31 of the
+ordinal containing the decimal digit are ignored.
+
+Triple and quad words refer to consecutive bytes in memory or registers. A
+triple word is 12-bytes long and a quad word is 16-bytes long. These data types
+are provided to make moving blocks of bytes easier. Generally, the triple word
+is used for moving extended real numbers. 
+
+A literal is a 5-bit ordinal which can be used in some instructions in place of
+a register. There are also two floating point literals as well (+1.0, +0.0)
+
+
+Thus we have the following data types:
+
+- bit (boolean operation)
+- bitfield 
+- byte integer
+- byte ordinal
+- decimal
+- short integer
+- short ordinal
+- integer (or word integer)
+- ordinal (or word ordinal)
+- long integer
+- long ordinal
+- real
+- long real
+- extended real
+- triple word
+- quad word
+- pointer (a special kind of ordinal)
+- pattern/mask (a special kind of ordinal used for masking operations)
+- jump displacement (a special integer with the range (-2^23) to (2^23 - 4) bytes from the current IP).
+- memory operand (a special kind of ordinal which gets encoded into a mem type operation)
+- branch displacement (special kind of integer with the range (-2^12) to (2^12 - 4) from the current IP).
+- condition code (a special kind of ordinal which describes the condition code modified by compare operations)
+- procedure 
+		 (a special kind of address which denotes the address of the first instruction
+		  that makes up the target procedure, generally will be named, can be relative
+		  or absolute). Procedures have their own set of local registers
+		 
+- system procedure 
+          a special kind of procedure that references one of the 259 available system procedures. 
+		  It is meant to allow for double indirect calling in a BIOS setting.
+		  Is still based off of names. It is a 2-byte ordinal value that is
+		  treated like an address but is not directly combinable with other
+		  procedures.
+- fault 
+		  Occurs when an instruction cannot be completed as is. Different kinds
+		  of instructions are able to invoke specific kinds of faults. A fault
+		  handler is invoked on the fault being raised. 
+		  
+		  Faults can also be raised by the user as well. 
+
+		  The kind of faults are treated as a special kind of ordinal. All
+		  faults are ordinals but not all ordinals are valid faults.
+- fault handler
+		  A special kind of procedure that is invoked when the corresponding
+		  fault is raised. A fault handler is not a pure ordinal or procedure,
+		  instead it has extra information encoded into it. Thus fault handlers
+		  are immutable and must be transformed explicitly.
+
+What we need to do is come up with one word names as well. Some of these types
+do not directly exist in what I am braining out.
+
+Here are the operations which apply to the different data types/classes:
+
+addc - Do 64-bit adds for ordinals and integers
+addi - Do 32-bit adds for integers (can generate overflow fault)
+addo - Do 32-bit adds for ordinals (includes pointers)
+addr - Real
+addrl - Long Reals, Extended Reals (kinda wonky)
+alterbit - bit (uses condition code to denote the value to store) [Ordinals are technically allowed as well]
+and - ordinals
+andnot - ordinals
+atadd - special operation which requires a pointer and two other registers to do an atomic operation
+atanr - Real, Extended Real 
+atanrl - Long Real, Extended Real
+atmod - special operation which requires a pointer, mask, and a value. Atomic operation
+b - Jump Displacement (branch)
+bx - Memory Operand (branch extended)
+bal - jump displacement (branch and link)
+balx - Memory Operand (branch and link extended)
+bbc (check bit and branch if clear) - bits and branch displacement (useful for if/else statements)
+bbs (check bit and branch if set) - bits and branch displacement (useful for if/else statements)
+branch if family (be, bne, bl, ble, bg, bge, bo, bno) - condition code and jump displacement
+call - procedure which has a relative offset to current IP (jump displacement)
+	   Useful when we are relatively close to the target procedure.
+calls - System procedure
+callx -  Procedure which is an absolute address by being a memory operation.
+chkbit - bit or ordinal, a condition code is generated from this operation. 
+classr - Real, Extended Real
+classrl - Long Real, Extended Real
+clrbit - bit or ordinal, the bit is cleared and returned (non-destructive)
+		 it becomes possible to use one ordinal register to store up to 32
+		 separate bit values at a time
+cmpdeci - decrementing looping construct for integers, returns a condition code
+cmpdeco - decrementing looping construct for ordinals, returns a condition code
+cmpi - compare two integers 
+       (literals are accepted and treated as positive integers from 0-31)
+	   Condition code is generated
+cmpo - Compare two oridnals
+	   literals are accepted
+		condition code is generated
+
+cmpinci - incrementing looping construct for integers, returns a condition code
+cmpinco - incrementing looping construct for ordinals, returns a condition code
+cmpor (ordered compare) - Reals, returns a condition code
+cmporl (ordered compare) - Long Reals, returns a condition code
+cmpr - Reals, returns a condition code
+cmprl - Long Reals, returns a condition code
+cmpib* - compare integers and branch operations when condition code generated from the compare portion matches the expectation. A condition code is returned as well as performing a jump
+cmpob* - compare ordinal and branch operations when condition code generated from the compare portion matches the expectation. A condition code is returned as well as jumping
+concmpi - Conditionally compare integers, takes in a condition code plus two integers to compare. A new condition code is returned (if the condition is met) otherwise the original one
+concmpo - Conditionally compare ordinals, takes in a condition code plus two ordinals to compare. A new condition code is returned (if the condition is met) otherwise the original one
+cosr - Real
+cosrl - Long Real
+cpyrsre - Real -> Extended Real
+cpysre - Real -> Extended Real (reversed sign)
+...
+scanbit - scan for the most-significant set bit in a given ordinal
+spanbit - scan for the most-significant clear bit in a given ordinal
+scanbyte - byte by byte comparison of src1 and src2 and sets true if any two corresponding bytes are equal otherwise false
+
+
+bits can be:
+
+- inverted (notbit)
+- set true (setbit)
+- set false (clrbit)
+- assign (alterbit) or convert from condition_code
+- check (chkbit) or convert to condition_code
+- branch if set (bbs)
+- branch if clear (bbc)
+
+decimals can be:
+
+- added (daddc)
+- subtracted (dsubc)
+- moved (dmovt)
+- assigned (mov)
+- valid (dmovt)
+
+- chained decimal values can be added easily with daddc
+
+bit fields can be:
+
+- extracted (extract) into an ordinal
+- modified (modify)
+- constructed
+
+word ordinals can be:
+
+- added (addo)
+- subtracted (subo) 
+- multiplied (mulo)
+- divided (divo)
+- bitwise and (and)
+- bitwise or (or)
+- invert (not)
+- bitwise nor (nor)
+- bitwise nand (nand)
+- bitwise xor (xor)
+- bitwise xnor (xnor)
+- notand
+- andnot
+- notor
+- ornot
+- remainder (remo)
+- rotated
+- shift left (shlo)
+- shift right  (shro)
+
+word integers can be:
+
+- added (addi)
+- subtracted (subi) 
+- multiplied (muli)
+- divided (divi)
+- remainder (remi)
+- modulo (modi)
+- shift left (shli)
+- shift right  (shri)
+- shift right dividing integer (shrdi)
+
+condition codes can be:
+
+- generated (via various comparison and test operations)
+- bitwise modified (special kind of ordinal)
+
+procedures can be:
+
+- called (call, callx)
+- defined/named
+- given local registers
+- returned from
+
+system procedures are procedures which are specially encoded:
+
+- A handle id (number) which describes a procedure to call indirectly
+
+This new language is c-like but simpler to reason about. Kinda like go but not
+dumb like go. 
+
+We have some hardcoded limits for simplicity sake but:
+
+- g0 is the first argument and return value
+- g0-g13 are arguments to procedures
+- g14 is the link register and needs to be zero for calling convention purposes
+- g15 is the frame pointer
+- local registers are only for temporaries
+- Up to 32 1-bit variables will be compacted into a single word ordinal for simplicity. If you need more bit variables then we will use another word for it.
+- Instead of using symbols for strange syntax, there are a set of builtin operators like so:
+
+	Address a;
+	Ordinal o = ld(a);
+
+	Procedures are defined like so:
+
+	procedure ?name = ($?args) returns ?return_type {
+		// commands go here
+	}
+
+	Then we can reference a procedure like so:
+
+	procedure ?name = ?a_real_procedure;
+
+- The language will also be super descriptive and easy to reason about so
+instead of:
+	const volatile integer * const volatile 
+we get:
+	const<volatile<pointer<const<volatile<integer>>>>>
+
+although we don't support the concept of constness yet or it will be
+different. Same thing with volatile, I do not want to have to have such odd
+semantics around volatile operations. It should be through the set of
+builtin functions instead. We explicit describe loads and stores  We can
+also describe an address type that denotes it cannot be optimized out and
+that loads and stores must be performed as described.
+
+I would rather integrate it into the type system than a series of extra
+modifiers. It is easier to extend the type system instead of having
+confusing semantics.
+
+We pass everything through global registers with more than 14 args requiring
+passing through the stack.
