@@ -35,6 +35,31 @@
 
 (defclass MAIN::binary-operation
   (is-a has-parent)
-  (slot 
+  (slot operation
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  (slot left
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  (slot right
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  )
 
+
+
+(defclass MAIN::unary-operation
+  (is-a has-parent)
+  (slot operation
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  (slot target 
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  )
 
