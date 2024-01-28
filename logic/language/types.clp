@@ -20,9 +20,12 @@
 ; ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+(include logic/parser/types.clp)
 
+(defclass MAIN::structure
+  (is-a has-parent))
 (defclass MAIN::procedure
-  (is-a has-parent
+  (is-a structure
         has-title)
   (multislot arguments
              (storage local)
@@ -32,13 +35,14 @@
              (storage local)
              (visibility public)
              (default ?NONE)))
-
-(defclass MAIN::binary-operation
-  (is-a has-parent)
-  (slot operation
+(defclass MAIN::operation-structure
+  (is-a structure)
+  (slot operation 
         (storage local)
         (visibility public)
-        (default ?NONE))
+        (default ?NONE)))
+(defclass MAIN::binary-operation
+  (is-a operation-structure)
   (slot left
         (storage local)
         (visibility public)
@@ -52,14 +56,9 @@
 
 
 (defclass MAIN::unary-operation
-  (is-a has-parent)
-  (slot operation
-        (storage local)
-        (visibility public)
-        (default ?NONE))
+  (is-a operation-structure)
   (slot target 
         (storage local)
         (visibility public)
         (default ?NONE))
   )
-

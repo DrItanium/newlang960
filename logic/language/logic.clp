@@ -21,3 +21,43 @@
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+(defrule LanguageGenerator::make-unary-operation
+         ?f <- (object (is-a expression)
+                       (contents ?first ?second)
+                       (name ?name)
+                       (parent ?parent))
+         =>
+         (unmake-instance ?f)
+         (make-instance ?name of unary-operation
+                        (parent ?parent)
+                        (operation ?first)
+                        (target ?second)))
+
+(defrule LanguageGenerator::make-binary-operation
+         ?f <- (object (is-a expression)
+                       (contents ?op ?left ?right)
+                       (name ?name)
+                       (parent ?parent))
+         =>
+         (unmake-instance ?f)
+         (make-instance ?name of binary-operation
+                        (parent ?parent)
+                        (operation ?op)
+                        (left ?left)
+                        (right ?right)))
+
+(defrule LanguageGenerator::make-procedure-empty-body
+         "It is possible that a procedure definition can be turned into a binary expression, convert it from that point to be on the safe side"
+         ?f <- (object (is-a binary-operation)
+                       (name ?name)
+                       (parent ?parent)
+                       (operation procedure)
+                       (left ?title)
+                       (right ?args))
+         =>
+         (unmake-instance ?f)
+         (make-instance ?name of procedure
+                        (parent ?parent)
+                        (title ?title)
+                        (args ?args)
+                        (body)))

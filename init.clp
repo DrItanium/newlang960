@@ -25,10 +25,12 @@
            (export ?ALL))
 ; include modules
 (include logic/parser/module.clp)
+(include logic/language/module.clp)
 ; include types
 (include logic/common/types.clp)
 (include logic/stages/types.clp)
 (include logic/parser/types.clp)
+(include logic/language/types.clp)
 
 
 (deffunction MAIN::begin
@@ -50,12 +52,11 @@
 ; 
 
 ; one type of declaration expression
-; (?type (?name ?value) $?body)
-; (let (?name 
-;       ?type
-;       ($?value))
-;       $?body)
 (include logic/parser/logic.clp)
-        
-
+(include logic/language/logic.clp)
+(defrule MAIN::startup
+         (declare (salience 10000))
+         =>
+         (focus LispParser
+                LanguageGenerator))
 
