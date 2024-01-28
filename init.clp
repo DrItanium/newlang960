@@ -41,14 +41,7 @@
 (defclass MAIN::expression
   (is-a has-parent)
   (role concrete)
-  (slot operator
-        (type SYMBOL)
-        (storage local)
-        (visibility public)
-        (default ?NONE))
-  (multislot rest
-             (type INSTANCE
-                   LEXEME)
+  (multislot contents 
              (storage local)
              (visibility public)
              (default ?NONE)))
@@ -59,34 +52,12 @@
 (defgeneric MAIN::mk-unary-expression)
 (defgeneric MAIN::mk-expression)
 (defmethod MAIN::mk-expression
-  ((?operator SYMBOL)
-   (?rest MULTIFIELD))
+  ((?contents MULTIFIELD))
   (make-instance of expression
-                 (operator ?operator)
-                 (rest ?rest)))
+                 (contents ?contents)))
 (defmethod MAIN::mk-expression
-  ((?operator SYMBOL)
-   $?rest)
-  (mk-expression ?operator
-                 ?rest))
-(defmethod MAIN::mk-binary-expression
-  "(?op ?left ?right)"
-  ((?operator SYMBOL)
-   (?left INSTANCE
-          LEXEME)
-   (?right INSTANCE
-           LEXEME))
-  (mk-expression ?operator
-                 ?left
-                 ?right))
-
-(defmethod MAIN::mk-unary-expression
-  "(?op ?target)"
-  ((?operator SYMBOL)
-   (?target INSTANCE
-            LEXEME))
-  (mk-expression ?operator
-                 ?target))
+  ($?contents)
+  (mk-expression ?contents))
 
 
 
@@ -107,3 +78,14 @@
 ; deffacts/objects etc
 ; rules include
 ; 
+
+; one type of declaration expression
+; (?type (?name ?value) $?body)
+; (let (?name 
+;       ?type
+;       ($?value))
+;       $?body)
+
+        
+
+
