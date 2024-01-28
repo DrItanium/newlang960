@@ -27,38 +27,17 @@
 (defclass MAIN::procedure
   (is-a structure
         has-title)
-  (multislot arguments
-             (storage local)
-             (visibility public)
-             (default ?NONE))
+  (slot arguments
+        (storage local)
+        (visibility public)
+        (default ?NONE))
   (multislot body
              (storage local)
              (visibility public)
              (default ?NONE)))
-(defclass MAIN::operation-structure
-  (is-a structure)
-  (slot operation 
-        (storage local)
-        (visibility public)
-        (default ?NONE)))
-(defclass MAIN::binary-operation
-  (is-a operation-structure)
-  (slot left
-        (storage local)
-        (visibility public)
-        (default ?NONE))
-  (slot right
-        (storage local)
-        (visibility public)
-        (default ?NONE))
-  )
-
-
-
-(defclass MAIN::unary-operation
-  (is-a operation-structure)
-  (slot target 
-        (storage local)
-        (visibility public)
-        (default ?NONE))
-  )
+(defclass MAIN::procedure-arguments
+  (is-a has-parent)
+  (multislot arguments
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
