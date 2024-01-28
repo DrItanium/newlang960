@@ -31,29 +31,6 @@
 (include logic/parser/types.clp)
 
 
-(defclass MAIN::expression
-  (is-a has-parent)
-  (role concrete)
-  (multislot contents 
-             (storage local)
-             (visibility public)
-             (default ?NONE)))
-
-
-
-(defgeneric MAIN::mk-binary-expression)
-(defgeneric MAIN::mk-unary-expression)
-(defgeneric MAIN::mk-expression)
-(defmethod MAIN::mk-expression
-  ((?contents MULTIFIELD))
-  (make-instance of expression
-                 (contents ?contents)))
-(defmethod MAIN::mk-expression
-  ($?contents)
-  (mk-expression ?contents))
-
-
-
 (deffunction MAIN::begin
              ()
 ;             (printout stdout "donuts" crlf)
@@ -78,7 +55,7 @@
 ;       ?type
 ;       ($?value))
 ;       $?body)
-
+(include logic/parser/logic.clp)
         
 
 

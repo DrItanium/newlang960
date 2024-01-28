@@ -21,7 +21,7 @@
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-(defrule LispParser::generate-file-container
+(defrule LispParser::generate-parser
          ?f <- (parse file ?path)
          =>
          (retract ?f)
@@ -82,9 +82,9 @@
                        (parsed FALSE)
                        (id ?id)
                        (current-element ?target))
-         (object (is-a container)
+         (object (is-a expression)
                  (name ?target)
-                 (parnet ?parent&~FALSE))
+                 (parent ?parent&~FALSE))
          =>
          (modify-instance ?f 
                           (current-token)
@@ -97,13 +97,39 @@
                        (valid TRUE)
                        (parsed FALSE)
                        (id ?id)
-                       (current-element ?target))
-         (object (is-a container)
+                       (path ?path)
+                       (current-element ?target)
+                       (name ?name))
+         (object (is-a expression)
                  (name ?target)
-                 (parnet FALSE))
+                 (parent FALSE))
          =>
          (printout stderr
                    "ERROR: mismatched parens, found a right paren without a matching left paren" crlf
                    "Target file: " ?path crlf
                    "Target parser: " ?name crlf)
          (halt))
+
+(defrule LispParser::make-atomic-value
+         "When it isn't a structural component we want to make atoms out of them!"
+         ?f <- (object (is-a parser)
+                       (current-token ?kind&~LEFT_PARENTHESIS&~RIGHT_PARENTHESIS&~STOP ?value)
+                       (parsing TRUE)
+                       (valid TRUE)
+                       (parsed FALSE)
+                       (id ?id)
+                       (current-element ?target))
+         ?k <- (object (is-a expression)
+                       (name ?target)
+                       (contents $?prior))
+         =>
+         (modify-instance ?f
+                          (current-token))
+         (modify-instance ?k
+                          (contents ?prior
+                                    (make-instance of atom
+                                                   (kind ?kind)
+                                                   (value ?value)))))
+;(defrule LispParser::hoist-symbols-out-of-atoms
+;         "Save time by hoisting symbols out of atoms into their parent expressions"
+;         ?f <- (object (is-a express

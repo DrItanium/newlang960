@@ -22,13 +22,13 @@
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (defclass MAIN::expression
-  "A container of expressions and other kinds of values"
+  ;A container of expressions and other kinds of values
   (is-a has-parent)
   (multislot contents
              (storage local)
              (visibility public)))
 (defclass MAIN::atom
-  "An element that is not an expression but is storable in one"
+  ;An element that is not an expression but is storable in one
     (is-a has-parent)
     (slot kind
           (type SYMBOL)
@@ -102,7 +102,7 @@
                     (bind ?self:parsing
                           ?self:valid)
                     (bind ?self:top-element
-                          (make-instance of file-container
+                          (make-instance of file-expression
                                          (parent FALSE)
                                          (file-name ?self:path)))
                     (bind ?self:current-element
