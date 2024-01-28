@@ -22,13 +22,13 @@
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (defclass MAIN::expression
-  ;A container of expressions and other kinds of values
+  "A container of expressions and other kinds of values"
   (is-a has-parent)
   (multislot contents
              (storage local)
              (visibility public)))
 (defclass MAIN::atom
-  ;An element that is not an expression but is storable in one
+  "An element that is not an expression but is storable in one"
     (is-a has-parent)
     (slot kind
           (type SYMBOL)
@@ -50,6 +50,13 @@
         (visibility public)
         (default ?NONE)))
 
+(deftemplate MAIN::parse-request
+             (slot kind
+                   (type SYMBOL)
+                   (default ?NONE))
+             (slot path
+                   (type LEXEME)
+                   (default ?NONE)))
 (defclass LispParser::parser 
           (is-a USER)
           (slot parsed 

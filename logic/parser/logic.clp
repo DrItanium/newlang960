@@ -22,7 +22,8 @@
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 (defrule LispParser::generate-parser
-         ?f <- (parse file ?path)
+         ?f <- (parse-request (kind file)
+                              (path ?path))
          =>
          (retract ?f)
          (make-instance of parser
