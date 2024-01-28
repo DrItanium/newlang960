@@ -52,3 +52,18 @@
              (storage local)
              (visibility public)
              (default ?NONE)))
+
+(defclass MAIN::variable
+  (is-a has-parent)
+  (slot id
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  (slot is-variadic
+        (type SYMBOL)
+        (allowed-symbols FALSE
+                         TRUE)
+        (storage local)
+        (visibility public)
+        (default ?NONE)))
+

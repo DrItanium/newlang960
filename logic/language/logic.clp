@@ -20,31 +20,46 @@
 ; ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+(deffunction LanguageGenerator::is-variable-type
+             (?kind)
+             (not (neq ?kind 
+                       SF_VARIABLE
+                       MF_VARIABLE)))
+(deffunction LanguageGenerator::is-variadic-type
+             (?kind)
+             (eq ?kind 
+                 MF_VARIABLE))
+(defrule LanguageGenerator::make-variable-type
+         ?f <- (object (is-a atom)
+                       (name ?name)
+                       (parent ?parent)
+                       (kind ?var&:(is-variable-type ?var))
+                       (value ?id))
+         =>
+         (unmake-instance ?f)
+         (make-instance ?name of variable
+                        (parent ?parent)
+                        (id ?id)
+                        (is-variadic (is-variadic-type ?var))))
 
 (defrule LanguageGenerator::make-procedure
          ?f <- (object (is-a expression)
                        (name ?name)
                        (parent ?parent)
                        (contents procedure ?title ?args $?body))
+         ?k <- (object (is-a expression)
+                       (name ?args)
+                       (contents $?decls))
          =>
-         (unmake-instance ?f)
+         (unmake-instance ?f 
+                          ?k)
          (make-instance ?name of procedure
                         (parent ?parent)
                         (title ?title)
-                        (arguments ?args)
+                        (arguments (make-instance ?args of procedure-arguments
+                                                  (parent ?name)
+                                                  (arguments $?decls)))
                         (body $?body)))
-(defrule LanguageGenerator::make-arguments-container
-         (object (is-a procedure)
-                 (arguments ?args))
-         ?k <- (object (is-a expression)
-                       (name ?args)
-                       (parent ?parent)
-                       (contents $?body))
-         =>
-         (unmake-instance ?k)
-         (make-instance ?args of procedure-arguments
-                        (parent ?parent)
-                        (arguments ?body)))
 
                  
 (defrule LanguageGenerator::make-single-procedure-argument
@@ -54,10 +69,10 @@
                        (name ?expr)
                        (parent ?p)
                        (contents ?atom ?kind))
-         ?z <- (object (is-a atom)
+         ?z <- (object (is-a variable)
                        (name ?atom)
-                       (kind SF_VARIABLE)
-                       (value ?name))
+                       (is-variadic FALSE)
+                       (id ?name))
          =>
          (unmake-instance ?f ?z)
          (make-instance ?expr of single-procedure-argument
