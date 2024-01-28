@@ -20,64 +20,33 @@
 ; ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-; A simple expert system to make it easier to write gal equations with more complex features
-(defmodule MAIN
-           (export ?ALL))
-; include modules
-; include types
-(include logic/common/types.clp)
-(include logic/stages/types.clp)
-(include logic/parser/types.clp)
-
 
 (defclass MAIN::expression
+  "A container of expressions and other kinds of values"
   (is-a has-parent)
-  (role concrete)
-  (multislot contents 
+  (multislot contents
              (storage local)
-             (visibility public)
-             (default ?NONE)))
+             (visibility public)))
+(defclass MAIN::atom
+  "An element that is not an expression but is storable in one"
+    (is-a has-parent)
+    (slot kind
+          (type SYMBOL)
+          (storage local)
+          (visibility public)
+          (default ?NONE))
+    (slot value
+          (storage local)
+          (visibility public)
+          (default ?NONE))
+    )
 
-
-
-(defgeneric MAIN::mk-binary-expression)
-(defgeneric MAIN::mk-unary-expression)
-(defgeneric MAIN::mk-expression)
-(defmethod MAIN::mk-expression
-  ((?contents MULTIFIELD))
-  (make-instance of expression
-                 (contents ?contents)))
-(defmethod MAIN::mk-expression
-  ($?contents)
-  (mk-expression ?contents))
-
-
-
-(deffunction MAIN::begin
-             ()
-;             (printout stdout "donuts" crlf)
-             )
-
-; declare stages
-;(deffacts MAIN::stages
-;          (stage (current optimization-stage1)
-;                 (rest flatten
-;                   discovery
-;                   correlate
-;                   cleanup
-;                   display)))
-;
-; deffacts/objects etc
-; rules include
-; 
-
-; one type of declaration expression
-; (?type (?name ?value) $?body)
-; (let (?name 
-;       ?type
-;       ($?value))
-;       $?body)
-
-        
-
+(defclass MAIN::file-expression
+  "The parsed contents of a file"
+  (is-a expression)
+  (slot file-handle
+        (type LEXEME)
+        (storage local)
+        (visibility public)
+        (default ?NONE)))
 
