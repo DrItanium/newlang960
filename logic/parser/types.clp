@@ -111,7 +111,7 @@
                     (bind ?self:top-element
                           (make-instance of file-expression
                                          (parent FALSE)
-                                         (file-name ?self:path)))
+                                         (file-handle ?self:path)))
                     (bind ?self:current-element
                           ?self:top-element))
 
