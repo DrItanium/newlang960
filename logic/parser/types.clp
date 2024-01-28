@@ -109,3 +109,13 @@
                           ?self:top-element))
 
 
+(deftemplate LispParser::hoist-target
+             (slot kind
+                   (type SYMBOL)
+                   (default ?NONE)))
+(deffacts LispParser::hoist-targets
+          (hoist-target (kind SYMBOL))
+          (hoist-target (kind STRING))
+          (hoist-target (kind INTEGER))
+          (hoist-target (kind FLOAT)))
+

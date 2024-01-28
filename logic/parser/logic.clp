@@ -130,6 +130,17 @@
                                     (make-instance of atom
                                                    (kind ?kind)
                                                    (value ?value)))))
-;(defrule LispParser::hoist-symbols-out-of-atoms
-;         "Save time by hoisting symbols out of atoms into their parent expressions"
-;         ?f <- (object (is-a express
+(defrule LispParser::hoist-type-out-of-atoms
+         "Save time by hoisting symbols out of atoms into their parent expressions"
+         ?f <- (object (is-a expression)
+                       (parent ~FALSE)
+                       (contents $?a ?atom $?b))
+         (hoist-target (kind ?hoist))
+         ?k <- (object (is-a atom)
+                       (name ?atom)
+                       (kind ?hoist)
+                       (value ?value))
+         =>
+         (unmake-instance ?k)
+         (modify-instance ?f
+                          (contents ?a ?value ?b)))
