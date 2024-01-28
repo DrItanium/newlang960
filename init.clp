@@ -23,21 +23,193 @@
 ; A simple expert system to make it easier to write gal equations with more complex features
 (defmodule MAIN
            (export ?ALL))
-; ripped from galclp
-;(include logic/source-ident/module.clp)
-;(include logic/pld/module.clp)
-;(include logic/parent_ident/module.clp)
+; include modules
+; include types
 (include logic/stages/types.clp)
-;(include logic/annotations/types.clp)
-;(include logic/pld/types.clp)
-;(include logic/parent_ident/types.clp)
-;(include logic/expression/types.clp)
+(defclass MAIN::literal
+  (is-a USER)
+  (role concrete)
+  (slot value
+        (type INTEGER)
+        (range 0 31)
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+(defclass MAIN::ordinal
+  (is-a USER)
+  (role concrete)
+  (slot register
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (allowed-symbols FALSE
+                         g0 g1 g2 g3
+                         g4 g5 g6 g7
+                         g8 g9 g10 g11
+                         g12 g13
+                         r3 r4 r5 r6
+                         r7 r8 r9 r10
+                         r11 r12 r13 r14
+                         r15)))
+(defclass MAIN::address
+  (is-a USER)
+  (role concrete)
+  (slot register
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (allowed-symbols FALSE
+                         g0 g1 g2 g3
+                         g4 g5 g6 g7
+                         g8 g9 g10 g11
+                         g12 g13
+                         r3 r4 r5 r6
+                         r7 r8 r9 r10
+                         r11 r12 r13 r14
+                         r15)))
+(defclass MAIN::integer
+  (is-a USER)
+  (role concrete)
+  (slot register
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (allowed-symbols FALSE
+                         g0 g1 g2 g3
+                         g4 g5 g6 g7
+                         g8 g9 g10 g11
+                         g12 g13
+                         r3 r4 r5 r6
+                         r7 r8 r9 r10
+                         r11 r12 r13 r14
+                         r15)))
+(defclass MAIN::long-word
+  (is-a USER)
+  (role concrete)
+  (slot lowest-register
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (allowed-symbols FALSE
+                         g0
+                         g2
+                         g4
+                         g6
+                         g8
+                         g10
+                         g12
+                         r4
+                         r6
+                         r8
+                         r10
+                         r12
+                         r14)))
+(defclass MAIN::triple-word
+  (is-a USER)
+  (role concrete)
+  (slot lowest-register
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (allowed-symbols FALSE
+                         g0
+                         g4
+                         g8
+                         r4
+                         r8
+                         r12)))
+(defclass MAIN::quad-word
+  (is-a USER)
+  (role concrete)
+  (slot lowest-register
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (allowed-symbols FALSE
+                         g0
+                         g4
+                         g8
+                         r4
+                         r8
+                         r12)))
+(defclass MAIN::has-parent
+  (is-a USER)
+  (role concrete)
+  (slot parent
+        (type INSTANCE
+              SYMBOL)
+        (allowed-symbols FALSE)
+        (storage local)
+        (visibility public))
+  )
+
+(defclass MAIN::expression
+  (is-a USER)
+  (role concrete)
+  (slot operator
+        (type SYMBOL)
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  (multislot rest
+             (type INSTANCE
+                   LEXEME)
+             (storage local)
+             (visibility public)
+             (default ?NONE)))
+             
+
+
+(defgeneric MAIN::mk-binary-expression)
+(defgeneric MAIN::mk-unary-expression)
+(defgeneric MAIN::mk-assignment-expression)
+(defgeneric MAIN::mk-expression)
+(defmethod MAIN::mk-expression
+  ((?operator SYMBOL)
+   (?rest MULTIFIELD))
+  (make-instance of expression
+                 (operator ?operator)
+                 (rest ?rest)))
+(defmethod MAIN::mk-expression
+  ((?operator SYMBOL)
+   $?rest)
+  (mk-expression ?operator
+                 ?rest))
+(defmethod MAIN::mk-binary-expression
+  "(?op ?left ?right)"
+  ((?operator SYMBOL)
+   (?left INSTANCE
+          LEXEME)
+   (?right INSTANCE
+           LEXEME))
+  (mk-expression ?operator
+                 ?left
+                 ?right))
+
+(defmethod MAIN::mk-unary-expression
+  "(?op ?target)"
+  ((?operator SYMBOL)
+   (?target INSTANCE
+            LEXEME))
+  (mk-expression ?operator
+                 ?target))
+
+(defmethod MAIN::mk-assignment-expression
+  "(let (?type ?name) ?value)"
+  ((?type SYMBOL)
+   (?name SYMBOL)
+   (?value INSTANCE
+           LEXEME))
+  (mk-expression let
+                 (mk-expression ?type ?name)
+                 ?value))
 
 (deffunction MAIN::begin
              ()
              (printout stdout "donuts" crlf)
              )
 
+; declare stages
 ;(deffacts MAIN::stages
 ;          (stage (current optimization-stage1)
 ;                 (rest flatten
@@ -46,35 +218,6 @@
 ;                   cleanup
 ;                   display)))
 ;
-;(deffacts MAIN::allowed-identity-conversions
-;          (convert-to-identity and-expression)
-;          (convert-to-identity or-expression))
-;
-;(deffacts MAIN::allowed-flattening-targets
-;          (can-flatten and-expression)
-;          (can-flatten or-expression))
-;
-;(deffacts MAIN::clone-requests
-;          (annotation-clone-request (target-kind reverse-non-expression-node)
-;                                    (new-name input-to)))
-;
-;(deffacts MAIN::pld-emission-requests
-;          (annotation (target display)
-;                      (kind focus-on-stage)
-;                      (reversible FALSE)
-;                      (args EmitPLDLogic)))
-;
-;(deffacts MAIN::structurally-similar-unary-nodes
-;          (annotation (target not-expression)
-;                      (kind allow-fusion)
-;                      (args))
-;          (annotation (target identity-expression)
-;                      (kind allow-fusion)
-;                      (args)))
-;
-;(include logic/parent_ident/logic.clp)
-;(include logic/pld/logic.clp)
-;(include logic/annotations/logic.clp)
-;(include logic/stages/logic.clp)
-;(include logic/expression/logic.clp)
-
+; deffacts/objects etc
+; rules include
+; 
