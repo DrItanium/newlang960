@@ -50,3 +50,11 @@
         (visibility public)
         (default ?NONE)))
 
+(deffacts MAIN::parser
+          (is-a USER)
+          (slot valid
+                (type SYMBOL)
+                (allowed-symbols FALSE
+                                 TRUE))
+          )
+
