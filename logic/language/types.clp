@@ -41,3 +41,14 @@
              (storage local)
              (visibility public)
              (default ?NONE)))
+(defclass MAIN::single-procedure-argument
+  (is-a has-parent)
+  (slot id
+        (type LEXEME)
+        (storage local)
+        (visibility public)
+        (default ?NONE))
+  (multislot kind
+             (storage local)
+             (visibility public)
+             (default ?NONE)))

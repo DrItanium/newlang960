@@ -47,3 +47,20 @@
                         (arguments ?body)))
 
                  
+(defrule LanguageGenerator::make-single-procedure-argument
+         (object (is-a procedure-arguments)
+                 (arguments $?a ?expr $?c))
+         ?f <- (object (is-a expression)
+                       (name ?expr)
+                       (parent ?p)
+                       (contents ?atom ?kind))
+         ?z <- (object (is-a atom)
+                       (name ?atom)
+                       (kind SF_VARIABLE)
+                       (value ?name))
+         =>
+         (unmake-instance ?f ?z)
+         (make-instance ?expr of single-procedure-argument
+                        (parent ?p)
+                        (id ?name)
+                        (kind ?kind)))
