@@ -26,20 +26,13 @@
 ; include modules
 ; include types
 (include logic/stages/types.clp)
-(defclass MAIN::literal
-  (is-a USER)
-  (role concrete)
-  (slot value
-        (type INTEGER)
-        (range 0 31)
-        (storage local)
-        (visibility public)
-        (default ?NONE))
+
 (defclass MAIN::ordinal
   (is-a USER)
   (role concrete)
   (slot register
-        (type SYMBOL)
+        (type SYMBOL
+              INTEGER)
         (storage local)
         (visibility public)
         (allowed-symbols FALSE
@@ -50,7 +43,12 @@
                          r3 r4 r5 r6
                          r7 r8 r9 r10
                          r11 r12 r13 r14
-                         r15)))
+                         r15)
+        (range 0 31)
+        (default-dynamic FALSE))
+  (message-handler is-literal primary)
+  )
+(defmessage-handler MAIN::ordinal is-literal primary () (integerp ?self:register))
 (defclass MAIN::address
   (is-a USER)
   (role concrete)
@@ -144,7 +142,7 @@
   )
 
 (defclass MAIN::expression
-  (is-a USER)
+  (is-a has-parent)
   (role concrete)
   (slot operator
         (type SYMBOL)
@@ -162,7 +160,6 @@
 
 (defgeneric MAIN::mk-binary-expression)
 (defgeneric MAIN::mk-unary-expression)
-(defgeneric MAIN::mk-assignment-expression)
 (defgeneric MAIN::mk-expression)
 (defmethod MAIN::mk-expression
   ((?operator SYMBOL)
@@ -194,15 +191,7 @@
   (mk-expression ?operator
                  ?target))
 
-(defmethod MAIN::mk-assignment-expression
-  "(let (?type ?name) ?value)"
-  ((?type SYMBOL)
-   (?name SYMBOL)
-   (?value INSTANCE
-           LEXEME))
-  (mk-expression let
-                 (mk-expression ?type ?name)
-                 ?value))
+
 
 (deffunction MAIN::begin
              ()
