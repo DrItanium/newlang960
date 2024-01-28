@@ -20,8 +20,9 @@
 ; ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-(defmodule ConstructFileExpression
+(defmodule LispParser
            "The goal of this module is to turn the text of an input file into something that can be parsed. 
            This module makes no assumptions about the language itself, just that it is in lisp syntax"
            (import MAIN
                    ?ALL))
+

@@ -21,4 +21,89 @@
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+(defrule LispParser::generate-file-container
+         ?f <- (parse file ?path)
+         =>
+         (retract ?f)
+         (make-instance of parser
+                        (path ?path)))
 
+
+(defrule LispParser::read-token
+         ?f <- (object (is-a parser)
+                       (current-token)
+                       (parsing TRUE)
+                       (valid TRUE)
+                       (parsed FALSE)
+                       (id ?id))
+         =>
+         (modify-instance ?f
+                          (current-token (next-token ?id))))
+(defrule LispParser::stop-parsing-file
+         ?f <- (object (is-a parser)
+                       (current-token STOP ?)
+                       (parsing TRUE)
+                       (valid TRUE)
+                       (parsed FALSE)
+                       (id ?id))
+         =>
+         (close ?id)
+         (modify-instance ?f 
+                          (current-token)
+                          (parsing FALSE)
+                          (parsed TRUE)))
+(defrule LispParser::make-new-expression
+         ?f <- (object (is-a parser)
+                       (current-token LEFT_PARENTHESIS ?)
+                       (parsing TRUE)
+                       (valid TRUE)
+                       (parsed FALSE)
+                       (id ?id)
+                       (current-element ?target))
+         ?k <- (object (is-a expression)
+                       (name ?target)
+                       (contents $?prior))
+         =>
+         (bind ?ncurr
+               (make-instance of expression
+                              (parent ?target)))
+         (modify-instance ?f 
+                          (current-token)
+                          (current-element ?ncurr))
+         (modify-instance ?k
+                          (contents ?prior
+                                    ?ncurr)))
+
+(defrule LispParser::leave-current-expression:valid
+         ?f <- (object (is-a parser)
+                       (current-token RIGHT_PARENTHESIS ?)
+                       (parsing TRUE)
+                       (valid TRUE)
+                       (parsed FALSE)
+                       (id ?id)
+                       (current-element ?target))
+         (object (is-a container)
+                 (name ?target)
+                 (parnet ?parent&~FALSE))
+         =>
+         (modify-instance ?f 
+                          (current-token)
+                          (current-element ?parent)))
+
+(defrule LispParser::leave-current-expression:invalid
+         ?f <- (object (is-a parser)
+                       (current-token RIGHT_PARENTHESIS ?)
+                       (parsing TRUE)
+                       (valid TRUE)
+                       (parsed FALSE)
+                       (id ?id)
+                       (current-element ?target))
+         (object (is-a container)
+                 (name ?target)
+                 (parnet FALSE))
+         =>
+         (printout stderr
+                   "ERROR: mismatched parens, found a right paren without a matching left paren" crlf
+                   "Target file: " ?path crlf
+                   "Target parser: " ?name crlf)
+         (halt))

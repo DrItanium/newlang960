@@ -50,11 +50,62 @@
         (visibility public)
         (default ?NONE)))
 
-(deffacts MAIN::parser
+(defclass LispParser::parser 
           (is-a USER)
-          (slot valid
+          (slot parsed 
                 (type SYMBOL)
                 (allowed-symbols FALSE
-                                 TRUE))
+                                 TRUE)
+                (storage local)
+                (visibility public))
+          (slot parsing 
+                (type SYMBOL)
+                (allowed-symbols FALSE
+                                 TRUE)
+                (storage local)
+                (visibility public))
+          (slot valid 
+                (type SYMBOL)
+                (allowed-symbols FALSE
+                                 TRUE)
+                (storage local)
+                (visibility public))
+          (slot path
+                (type LEXEME)
+                (storage local)
+                (visibility public)
+                (default ?NONE))
+          (slot id 
+                (type SYMBOL)
+                (storage local)
+                (visibility public)
+                (default-dynamic (gensym*)))
+          (slot top-element
+                (type INSTANCE)
+                (storage local)
+                (visibility public))
+          (slot current-element 
+                (type INSTANCE)
+                (storage local)
+                (visibility public))
+          (multislot current-token
+                     (storage local)
+                     (visibility public))
+          (message-handler init after)
           )
+(defmessage-handler LispParser::parser init after 
+                    ()
+                    (bind ?self:valid
+                          (open ?self:path
+                                ?self:id
+                                "r"))
+                    (bind ?self:parsing
+                          ?self:valid)
+                    (bind ?self:top-element
+                          (make-instance of file-container
+                                         (parent FALSE)
+                                         (file-name ?self:path)))
+                    (bind ?self:current-element
+                          ?self:top-element))
+
 
