@@ -26,110 +26,6 @@
 ; include modules
 ; include types
 (include logic/stages/types.clp)
-
-(defclass MAIN::ordinal
-  (is-a USER)
-  (role concrete)
-  (slot register
-        (type SYMBOL
-              INTEGER)
-        (storage local)
-        (visibility public)
-        (allowed-symbols FALSE
-                         g0 g1 g2 g3
-                         g4 g5 g6 g7
-                         g8 g9 g10 g11
-                         g12 g13
-                         r3 r4 r5 r6
-                         r7 r8 r9 r10
-                         r11 r12 r13 r14
-                         r15)
-        (range 0 31)
-        (default-dynamic FALSE))
-  (message-handler is-literal primary)
-  )
-(defmessage-handler MAIN::ordinal is-literal primary () (integerp ?self:register))
-(defclass MAIN::address
-  (is-a USER)
-  (role concrete)
-  (slot register
-        (type SYMBOL)
-        (storage local)
-        (visibility public)
-        (allowed-symbols FALSE
-                         g0 g1 g2 g3
-                         g4 g5 g6 g7
-                         g8 g9 g10 g11
-                         g12 g13
-                         r3 r4 r5 r6
-                         r7 r8 r9 r10
-                         r11 r12 r13 r14
-                         r15)))
-(defclass MAIN::integer
-  (is-a USER)
-  (role concrete)
-  (slot register
-        (type SYMBOL)
-        (storage local)
-        (visibility public)
-        (allowed-symbols FALSE
-                         g0 g1 g2 g3
-                         g4 g5 g6 g7
-                         g8 g9 g10 g11
-                         g12 g13
-                         r3 r4 r5 r6
-                         r7 r8 r9 r10
-                         r11 r12 r13 r14
-                         r15)))
-(defclass MAIN::long-word
-  (is-a USER)
-  (role concrete)
-  (slot lowest-register
-        (type SYMBOL)
-        (storage local)
-        (visibility public)
-        (allowed-symbols FALSE
-                         g0
-                         g2
-                         g4
-                         g6
-                         g8
-                         g10
-                         g12
-                         r4
-                         r6
-                         r8
-                         r10
-                         r12
-                         r14)))
-(defclass MAIN::triple-word
-  (is-a USER)
-  (role concrete)
-  (slot lowest-register
-        (type SYMBOL)
-        (storage local)
-        (visibility public)
-        (allowed-symbols FALSE
-                         g0
-                         g4
-                         g8
-                         r4
-                         r8
-                         r12)))
-(defclass MAIN::quad-word
-  (is-a USER)
-  (role concrete)
-  (slot lowest-register
-        (type SYMBOL)
-        (storage local)
-        (visibility public)
-        (allowed-symbols FALSE
-                         g0
-                         g4
-                         g8
-                         r4
-                         r8
-                         r12)))
 (defclass MAIN::has-parent
   (is-a USER)
   (role concrete)
@@ -140,6 +36,7 @@
         (storage local)
         (visibility public))
   )
+
 
 (defclass MAIN::expression
   (is-a has-parent)
@@ -155,7 +52,7 @@
              (storage local)
              (visibility public)
              (default ?NONE)))
-             
+
 
 
 (defgeneric MAIN::mk-binary-expression)
@@ -195,7 +92,7 @@
 
 (deffunction MAIN::begin
              ()
-             (printout stdout "donuts" crlf)
+;             (printout stdout "donuts" crlf)
              )
 
 ; declare stages
