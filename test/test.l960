@@ -1,0 +1,6 @@
+(procedure donuts ((?a integer)
+				   (?b integer)))
+
+(procedure donuts2 ((?a integer)
+					(?b integer))
+ (+ ?a ?b))

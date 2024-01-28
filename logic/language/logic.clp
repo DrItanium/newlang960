@@ -61,3 +61,16 @@
                         (title ?title)
                         (args ?args)
                         (body)))
+
+(defrule LanguageGenerator::make-procedure
+         ?f <- (object (is-a expression)
+                       (name ?name)
+                       (parent ?parent)
+                       (contents procedure ?title ?args $?body))
+         =>
+         (unmake-instance ?f)
+         (make-instance ?name of procedure
+                        (parent ?parent)
+                        (title ?title)
+                        (args ?args)
+                        (body $?body)))
