@@ -107,8 +107,7 @@
          =>
          (printout stderr
                    "ERROR: mismatched parens, found a right paren without a matching left paren" crlf
-                   "Target file: " ?path crlf
-                   "Target parser: " ?name crlf)
+                   "Target file: " ?path crlf)
          (halt))
 
 (defrule LispParser::make-atomic-value
@@ -145,3 +144,4 @@
          (unmake-instance ?k)
          (modify-instance ?f
                           (contents ?a ?value ?b)))
+
