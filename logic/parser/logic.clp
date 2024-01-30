@@ -129,6 +129,8 @@
                           (contents ?prior
                                     (make-instance of atom
                                                    (parent ?target)
+                                                   (kind ?kind)
+                                                   (value ?value)
                                                    (contents ?kind ?value)))))
 (defrule LispParser::hoist-type-out-of-atoms
          "Save time by hoisting symbols out of atoms into their parent expressions"

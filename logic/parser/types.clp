@@ -30,10 +30,14 @@
 (defclass MAIN::atom
   "An element that is not an expression but is storable in one"
     (is-a expression)
-    (message-handler get-value primary)
-    (message-handler get-kind primary))
-(defmessage-handler MAIN::atom get-kind () (nth$ 1 (dynamic-get contents)))
-(defmessage-handler MAIN::atom get-value () (nth$ 2 (dynamic-get contents)))
+    (slot kind
+          (storage local)
+          (visibility public)
+          (default ?NONE))
+    (slot value 
+          (storage local)
+          (visibility public)
+          (default ?NONE)))
 
 (defclass MAIN::file-expression
   "The parsed contents of a file"
@@ -118,9 +122,6 @@
           (hoist-target (kind SYMBOL))
           (hoist-target (kind STRING))
           (hoist-target (kind INTEGER))
-          (hoist-target (kind FLOAT)))
+          (hoist-target (kind FLOAT))
+          (hoist-target (kind INSTANCE_NAME)))
 
-(deffacts LispParser::atom-conversion-targets
-          (atom-conversion SF_VARIABLE -> local-singlefield-variable)
-          (atom-conversion MF_VARIABLE -> local-multifield-variable)
-          (atom-conversion GBL_VARIABLE -> global-variable))
