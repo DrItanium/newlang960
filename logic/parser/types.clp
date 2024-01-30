@@ -40,6 +40,36 @@
           (visibility public)
           (default ?NONE))
     )
+(defclass MAIN::variable
+  (is-a has-parent)
+  (role abstract)
+  (pattern-match non-reactive)
+  (slot value
+        (storage local)
+        (visibility public)
+        (default ?NONE)))
+(defclass MAIN::local-variable
+  (is-a variable)
+  (role concrete)
+  (pattern-match reactive))
+(defclass MAIN::global-variable
+  (is-a variable)
+  (role concrete)
+  (pattern-match reactive))
+(defclass MAIN::local-singlefield-variable
+  (is-a local-variable)
+  (role concrete)
+  (pattern-match reactive))
+(defclass MAIN::local-multifield-variable
+  (is-a local-variable)
+  (role concrete)
+  (pattern-match reactive))
+(defclass MAIN::global-singlefield-variable
+  (is-a global-variable)
+  (role concrete))
+(defclass MAIN::global-multifield-variable
+  (is-a global-variable)
+  (role concrete))
 
 (defclass MAIN::file-expression
   "The parsed contents of a file"
