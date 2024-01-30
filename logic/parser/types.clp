@@ -29,35 +29,11 @@
              (visibility public)))
 (defclass MAIN::atom
   "An element that is not an expression but is storable in one"
-    (is-a has-parent)
-    (slot kind
-          (type SYMBOL)
-          (storage local)
-          (visibility public)
-          (default ?NONE))
-    (slot value
-          (storage local)
-          (visibility public)
-          (default ?NONE))
-    )
-(defclass MAIN::variable
-  (is-a has-parent)
-  (slot value
-        (storage local)
-        (visibility public)
-        (default ?NONE)))
-
-(defclass MAIN::local-variable
-  (is-a variable))
-
-(defclass MAIN::local-singlefield-variable
-  (is-a local-variable))
-
-(defclass MAIN::local-multifield-variable
-  (is-a local-variable))
-
-(defclass MAIN::global-variable
-  (is-a variable))
+    (is-a expression)
+    (message-handler get-value primary)
+    (message-handler get-kind primary))
+(defmessage-handler MAIN::atom get-kind () (nth$ 1 (dynamic-get contents)))
+(defmessage-handler MAIN::atom get-value () (nth$ 2 (dynamic-get contents)))
 
 (defclass MAIN::file-expression
   "The parsed contents of a file"

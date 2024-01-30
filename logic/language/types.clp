@@ -22,16 +22,10 @@
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 (include logic/parser/types.clp)
 
-(defclass MAIN::structure
-  (is-a has-parent))
 (defclass MAIN::procedure
-  (is-a structure
+  (is-a expression 
         has-title)
   (multislot arguments
-             (storage local)
-             (visibility public)
-             (default ?NONE))
-  (multislot body
              (storage local)
              (visibility public)
              (default ?NONE)))
@@ -53,10 +47,4 @@
              (storage local)
              (visibility public)
              (default ?NONE)))
-
-(deftemplate LanguageGenerator::procedure-linkage
-             (slot target-procedure
-                   (default ?NONE))
-             (slot target-subexpression
-                   (default ?NONE)))
 

@@ -38,47 +38,5 @@
                         (parent ?parent)
                         (title ?title)
                         (arguments ?decls)
-                        (body $?body)))
+                        (contents $?body)))
 
-                 
-(defrule LanguageGenerator::make-single-procedure-argument
-         (object (is-a procedure)
-                 (arguments $? ?curr $?))
-         ?f <- (object (is-a expression)
-                 (name ?curr)
-                 (parent ?parent)
-                 (contents ?atom ?kind))
-         ?z <- (object (is-a local-singlefield-variable)
-                       (name ?atom)
-                       (value ?var-name))
-         =>
-         (unmake-instance ?f 
-                          ?z)
-         (make-instance ?curr of local-procedure-variable
-                        (parent ?parent)
-                        (id ?var-name)
-                        (kind ?kind)))
-
-(defrule LanguageGenerator::generate-parent-connection-fact
-         (object (is-a has-parent)
-                 (name ?name)
-                 (parent ?parent&~FALSE))
-         =>
-         (assert (parent-linkage ?name ?parent)))
-
-(defrule LanguageGenerator::generate-indirect-parent-connection-fact
-         ?f <- (parent-linkage ?parent ?grandparent)
-         ?f2 <- (parent-linkage ?child ?parent)
-         (test (neq ?f ?f2))
-         =>
-         (assert (parent-linkage ?child ?grandparent)))
-
-(defrule LanguageGenerator::denote-expression-is-part-of-a-procedure
-         (parent-linkage ?curr ?procedure)
-         (object (is-a procedure)
-                 (name ?procedure))
-         (object (is-a has-parent)
-                 (name ?curr))
-         =>
-         (assert (procedure-linkage (target-procedure ?procedure)
-                                    (target-subexpression ?curr))))
