@@ -42,34 +42,18 @@
     )
 (defclass MAIN::variable
   (is-a has-parent)
-  (role abstract)
-  (pattern-match non-reactive)
   (slot value
         (storage local)
         (visibility public)
         (default ?NONE)))
 (defclass MAIN::local-variable
-  (is-a variable)
-  (role concrete)
-  (pattern-match reactive))
-(defclass MAIN::global-variable
-  (is-a variable)
-  (role concrete)
-  (pattern-match reactive))
+  (is-a variable))
 (defclass MAIN::local-singlefield-variable
-  (is-a local-variable)
-  (role concrete)
-  (pattern-match reactive))
+  (is-a local-variable))
 (defclass MAIN::local-multifield-variable
-  (is-a local-variable)
-  (role concrete)
-  (pattern-match reactive))
-(defclass MAIN::global-singlefield-variable
-  (is-a global-variable)
-  (role concrete))
-(defclass MAIN::global-multifield-variable
-  (is-a global-variable)
-  (role concrete))
+  (is-a local-variable))
+(defclass MAIN::global-variable
+  (is-a variable))
 
 (defclass MAIN::file-expression
   "The parsed contents of a file"
@@ -156,3 +140,7 @@
           (hoist-target (kind INTEGER))
           (hoist-target (kind FLOAT)))
 
+(deffacts LispParser::atom-conversion-targets
+          (atom-conversion SF_VARIABLE -> local-singlefield-variable)
+          (atom-conversion MF_VARIABLE -> local-multifield-variable)
+          (atom-conversion GBL_VARIABLE -> global-variable))

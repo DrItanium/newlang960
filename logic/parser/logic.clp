@@ -145,3 +145,17 @@
          (modify-instance ?f
                           (contents ?a ?value ?b)))
 
+(defrule LispParser::perform-atom-conversion
+         ?f <- (object (is-a atom)
+                       (parent ?parent)
+                       (name ?atom)
+                       (kind ?target)
+                       (value ?value))
+         (atom-conversion ?target -> ?obj-kind)
+         =>
+         (unmake-instance ?f)
+         (make-instance ?atom of ?obj-kind 
+                        (parent ?parent)
+                        (value ?value)))
+
+

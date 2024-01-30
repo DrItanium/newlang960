@@ -20,27 +20,6 @@
 ; ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-(deffunction LanguageGenerator::is-variable-type
-             (?kind)
-             (not (neq ?kind 
-                       SF_VARIABLE
-                       MF_VARIABLE)))
-(deffunction LanguageGenerator::is-variadic-type
-             (?kind)
-             (eq ?kind 
-                 MF_VARIABLE))
-(defrule LanguageGenerator::make-variable-type
-         ?f <- (object (is-a atom)
-                       (name ?name)
-                       (parent ?parent)
-                       (kind ?var&:(is-variable-type ?var))
-                       (value ?id))
-         =>
-         (unmake-instance ?f)
-         (make-instance ?name of variable
-                        (parent ?parent)
-                        (id ?id)
-                        (is-variadic (is-variadic-type ?var))))
 
 (defrule LanguageGenerator::make-procedure
          ?f <- (object (is-a expression)
@@ -69,10 +48,9 @@
                        (name ?expr)
                        (parent ?p)
                        (contents ?atom ?kind))
-         ?z <- (object (is-a variable)
+         ?z <- (object (is-a local-singlefield-variable)
                        (name ?atom)
-                       (is-variadic FALSE)
-                       (id ?name))
+                       (value ?name))
          =>
          (unmake-instance ?f ?z)
          (make-instance ?expr of single-procedure-argument
