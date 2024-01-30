@@ -48,3 +48,27 @@
              (visibility public)
              (default ?NONE)))
 
+
+(defclass MAIN::class:number
+  (is-a USER))
+(defclass MAIN::class:whole-number
+  (is-a class:number))
+(defclass MAIN::class:real
+  (is-a class:number))
+(defclass MAIN::ordinal
+  (is-a class:whole-number))
+(defclass MAIN::integer
+  (is-a class:whole-number))
+(defclass MAIN::class:bit-quantity
+  (is-a USER))
+(defclass MAIN::bit
+  (is-a class:bit-quantity))
+(defclass MAIN::bitfield
+  (is-a class:bit-quantity))
+(defclass MAIN::real
+  (is-a class:real))
+(defclass MAIN::long-real
+  (is-a class:real))
+(defclass MAIN::extended-real
+  (is-a class:real))
+  
