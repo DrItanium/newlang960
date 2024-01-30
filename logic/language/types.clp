@@ -54,3 +54,9 @@
              (visibility public)
              (default ?NONE)))
 
+(deftemplate LanguageGenerator::procedure-linkage
+             (slot target-procedure
+                   (default ?NONE))
+             (slot target-subexpression
+                   (default ?NONE)))
+
