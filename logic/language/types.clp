@@ -22,53 +22,41 @@
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 (include logic/parser/types.clp)
 
-(defclass MAIN::procedure
-  (is-a expression 
-        has-title)
-  (multislot arguments
-             (storage local)
-             (visibility public)
-             (default ?NONE)))
-(defclass MAIN::procedure-arguments
-  (is-a has-parent)
-  (multislot arguments
-             (storage local)
-             (visibility public)
-             (default ?NONE)))
-
-(defclass MAIN::local-procedure-variable
-  (is-a has-parent)
-  (slot id
-        (type LEXEME)
-        (storage local)
-        (visibility public)
-        (default ?NONE))
-  (multislot kind
-             (storage local)
-             (visibility public)
-             (default ?NONE)))
-
-
-(defclass MAIN::class:number
-  (is-a USER))
-(defclass MAIN::class:whole-number
-  (is-a class:number))
-(defclass MAIN::class:real
-  (is-a class:number))
-(defclass MAIN::ordinal
-  (is-a class:whole-number))
-(defclass MAIN::integer
-  (is-a class:whole-number))
-(defclass MAIN::class:bit-quantity
-  (is-a USER))
-(defclass MAIN::bit
-  (is-a class:bit-quantity))
-(defclass MAIN::bitfield
-  (is-a class:bit-quantity))
-(defclass MAIN::real
-  (is-a class:real))
-(defclass MAIN::long-real
-  (is-a class:real))
-(defclass MAIN::extended-real
-  (is-a class:real))
-  
+;(defclass MAIN::procedure
+;  (is-a expression 
+;        has-title)
+;  (multislot arguments
+;             (storage local)
+;             (visibility public)
+;             (default ?NONE)))
+;(defclass MAIN::procedure-arguments
+;  (is-a has-parent)
+;  (multislot arguments
+;             (storage local)
+;             (visibility public)
+;             (default ?NONE)))
+;
+;(defclass MAIN::local-procedure-variable
+;  (is-a has-parent)
+;  (slot id
+;        (type LEXEME)
+;        (storage local)
+;        (visibility public)
+;        (default ?NONE))
+;  (multislot kind
+;             (storage local)
+;             (visibility public)
+;             (default ?NONE)))
+;
+;(defclass MAIN::binary-expression
+;  (is-a expression)
+;  (multislot contents
+;             (source composite)
+;             (cardinality 3 3)))
+;(defclass MAIN::unary-expression
+;  (is-a expression)
+;  (multislot contents
+;             (source composite)
+;             (cardinality 2 2)))
+;(defclass MAIN::
+;

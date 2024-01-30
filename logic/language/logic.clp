@@ -21,22 +21,22 @@
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-(defrule LanguageGenerator::make-procedure
-         ?f <- (object (is-a expression)
-                       (name ?name)
-                       (parent ?parent)
-                       (contents procedure ?title ?args $?body))
-         ?k <- (object (is-a expression)
-                       (name ?args)
-                       (contents $?decls))
-         =>
-         (unmake-instance ?f 
-                          ?k)
-         (progn$ (?a ?decls)
-                 (send ?a put-parent ?name))
-         (make-instance ?name of procedure
-                        (parent ?parent)
-                        (title ?title)
-                        (arguments ?decls)
-                        (contents $?body)))
-
+;(defrule LanguageGenerator::make-procedure
+;         ?f <- (object (is-a expression)
+;                       (name ?name)
+;                       (parent ?parent)
+;                       (contents procedure ?title ?args $?body))
+;         ?k <- (object (is-a expression)
+;                       (name ?args)
+;                       (contents $?decls))
+;         =>
+;         (unmake-instance ?f 
+;                          ?k)
+;         (progn$ (?a ?decls)
+;                 (send ?a put-parent ?name))
+;         (make-instance ?name of procedure
+;                        (parent ?parent)
+;                        (title ?title)
+;                        (arguments ?decls)
+;                        (contents $?body)))
+;

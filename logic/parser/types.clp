@@ -114,14 +114,30 @@
                           ?self:top-element))
 
 
-(deftemplate LispParser::hoist-target
+(deftemplate LispParser::core-type-translation
              (slot kind
                    (type SYMBOL)
-                   (default ?NONE)))
-(deffacts LispParser::hoist-targets
-          (hoist-target (kind SYMBOL))
-          (hoist-target (kind STRING))
-          (hoist-target (kind INTEGER))
-          (hoist-target (kind FLOAT))
-          (hoist-target (kind INSTANCE_NAME)))
-
+                   (default ?NONE))
+             (slot action
+                   (type SYMBOL)
+                   (allowed-symbols hoist
+                                    new-expression
+                                    end-expression
+                                    stop)))
+(deffacts LispParser::transactions-to-perform
+          (core-type-translation (kind STOP)
+                                 (action stop))
+          (core-type-translation (kind SYMBOL)
+                                 (action hoist))
+          (core-type-translation (kind STRING)
+                                 (action hoist))
+          (core-type-translation (kind INTEGER)
+                                 (action hoist))
+          (core-type-translation (kind FLOAT)
+                                 (action hoist))
+          (core-type-translation (kind INSTANCE_NAME)
+                                 (action hoist))
+          (core-type-translation (kind RIGHT_PARENTHESIS)
+                                 (action end-expression))
+          (core-type-translation (kind LEFT_PARENTHESIS)
+                                 (action new-expression)))

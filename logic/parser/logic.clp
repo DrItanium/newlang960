@@ -42,25 +42,30 @@
                           (current-token (next-token ?id))))
 (defrule LispParser::stop-parsing-file
          ?f <- (object (is-a parser)
-                       (current-token STOP ?)
+                       (current-token ?kind ?)
                        (parsing TRUE)
                        (valid TRUE)
                        (parsed FALSE)
                        (id ?id))
+         (core-type-translation (kind ?kind)
+                                (action stop))
          =>
          (close ?id)
          (modify-instance ?f 
                           (current-token)
                           (parsing FALSE)
                           (parsed TRUE)))
+
 (defrule LispParser::make-new-expression
          ?f <- (object (is-a parser)
-                       (current-token LEFT_PARENTHESIS ?)
+                       (current-token ?kind ?)
                        (parsing TRUE)
                        (valid TRUE)
                        (parsed FALSE)
                        (id ?id)
                        (current-element ?target))
+         (core-type-translation (kind ?kind)
+                                (action new-expression))
          ?k <- (object (is-a expression)
                        (name ?target)
                        (contents $?prior))
@@ -77,12 +82,14 @@
 
 (defrule LispParser::leave-current-expression:valid
          ?f <- (object (is-a parser)
-                       (current-token RIGHT_PARENTHESIS ?)
+                       (current-token ?kind ?)
                        (parsing TRUE)
                        (valid TRUE)
                        (parsed FALSE)
                        (id ?id)
                        (current-element ?target))
+         (core-type-translation (kind ?kind)
+                                (action end-expression))
          (object (is-a expression)
                  (name ?target)
                  (parent ?parent&~FALSE))
@@ -93,7 +100,7 @@
 
 (defrule LispParser::leave-current-expression:invalid
          ?f <- (object (is-a parser)
-                       (current-token RIGHT_PARENTHESIS ?)
+                       (current-token ?kind ?)
                        (parsing TRUE)
                        (valid TRUE)
                        (parsed FALSE)
@@ -101,6 +108,8 @@
                        (path ?path)
                        (current-element ?target)
                        (name ?name))
+         (core-type-translation (kind ?kind)
+                                (action end-expression))
          (object (is-a expression)
                  (name ?target)
                  (parent FALSE))
@@ -113,12 +122,14 @@
 (defrule LispParser::make-atomic-value
          "When it isn't a structural component we want to make atoms out of them!"
          ?f <- (object (is-a parser)
-                       (current-token ?kind&~LEFT_PARENTHESIS&~RIGHT_PARENTHESIS&~STOP ?value)
+                       (current-token ?kind 
+                                      ?value)
                        (parsing TRUE)
                        (valid TRUE)
                        (parsed FALSE)
                        (id ?id)
                        (current-element ?target))
+         (not (core-type-translation (kind ?kind)))
          ?k <- (object (is-a expression)
                        (name ?target)
                        (contents $?prior))
@@ -132,17 +143,24 @@
                                                    (kind ?kind)
                                                    (value ?value)
                                                    (contents ?kind ?value)))))
-(defrule LispParser::hoist-type-out-of-atoms
-         "Save time by hoisting symbols out of atoms into their parent expressions"
-         ?f <- (object (is-a expression)
-                       (parent ~FALSE)
-                       (contents $?a ?atom $?b))
-         (hoist-target (kind ?hoist))
-         ?k <- (object (is-a atom)
-                       (name ?atom)
-                       (contents ?hoist 
-                                 ?value))
+(defrule LispParser::directly-place-atomic-type
+         "When it isn't a structural component we want to make atoms out of them!"
+         ?f <- (object (is-a parser)
+                       (current-token ?kind 
+                                      ?value)
+                       (parsing TRUE)
+                       (valid TRUE)
+                       (parsed FALSE)
+                       (id ?id)
+                       (current-element ?target))
+         (core-type-translation (kind ?kind)
+                                (action hoist))
+         ?k <- (object (is-a expression)
+                       (name ?target)
+                       (contents $?prior))
          =>
-         (unmake-instance ?k)
          (modify-instance ?f
-                          (contents ?a ?value ?b)))
+                          (current-token))
+         (modify-instance ?k
+                          (contents ?prior
+                                    ?value)))
