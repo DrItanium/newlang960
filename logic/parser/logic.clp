@@ -145,7 +145,7 @@
          (modify-instance ?f
                           (contents ?a ?value ?b)))
 
-(defrule LispParser::perform-atom-conversion
+(defrule LispParser::perform-variable-generation
          ?f <- (object (is-a atom)
                        (parent ?parent)
                        (name ?atom)

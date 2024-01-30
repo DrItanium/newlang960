@@ -46,12 +46,16 @@
         (storage local)
         (visibility public)
         (default ?NONE)))
+
 (defclass MAIN::local-variable
   (is-a variable))
+
 (defclass MAIN::local-singlefield-variable
   (is-a local-variable))
+
 (defclass MAIN::local-multifield-variable
   (is-a local-variable))
+
 (defclass MAIN::global-variable
   (is-a variable))
 

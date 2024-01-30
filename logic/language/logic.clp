@@ -53,7 +53,7 @@
                        (value ?name))
          =>
          (unmake-instance ?f ?z)
-         (make-instance ?expr of single-procedure-argument
+         (make-instance ?expr of local-procedure-variable 
                         (parent ?p)
                         (id ?name)
                         (kind ?kind)))

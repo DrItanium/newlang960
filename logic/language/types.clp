@@ -27,10 +27,10 @@
 (defclass MAIN::procedure
   (is-a structure
         has-title)
-  (slot arguments
-        (storage local)
-        (visibility public)
-        (default ?NONE))
+  (multislot arguments
+             (storage local)
+             (visibility public)
+             (default ?NONE))
   (multislot body
              (storage local)
              (visibility public)
@@ -41,7 +41,8 @@
              (storage local)
              (visibility public)
              (default ?NONE)))
-(defclass MAIN::single-procedure-argument
+
+(defclass MAIN::local-procedure-variable
   (is-a has-parent)
   (slot id
         (type LEXEME)
