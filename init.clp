@@ -31,10 +31,12 @@
 (include logic/stages/types.clp)
 (include logic/parser/types.clp)
 (include logic/language/types.clp)
+(include logic/generator/types.clp)
 
 
 (deffunction MAIN::begin
              ()
+             (set-dynamic-constraint-checking TRUE)
 ;             (printout stdout "donuts" crlf)
              )
 
