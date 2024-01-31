@@ -1388,16 +1388,6 @@
    $?body)
   (.procedure ?name
               ?body))
-(defmethod MAIN::.text
-  ()
-  (emit-instruction .text))
-(defmethod MAIN::.text
-  ((?contents MULTIFIELD))
-  (make-scope (.text)
-              ?contents))
-(defmethod MAIN::.text
-  ($?contents)
-  (.text ?contents))
 
 (defmethod MAIN::.global
   ((?title SYMBOL))
@@ -1439,3 +1429,71 @@
   (format nil "%s = %s"
           ?name
           (send ?value to-string)))
+
+(defmethod MAIN::.text 
+  () 
+  (emit-instruction .text))
+(defmethod MAIN::.text 
+  ((?subsection INTEGER)) 
+  (emit-instruction .text 
+                    ?subsection))
+(defmethod MAIN::.text 
+  ((?subsection INTEGER)
+   (?contents MULTIFIELD)) 
+  (make-scope (.text ?subsection) 
+              ?contents))
+(defmethod MAIN::.text 
+  ((?contents MULTIFIELD)) 
+  (make-scope (.text) 
+              ?contents))
+(defmethod MAIN::.text 
+  ($?contents)
+  (.text ?contents))
+(defmethod MAIN::.text 
+  ((?subsection INTEGER)
+   $?contents)
+  (.text ?subsection
+         ?contents))
+(defmethod MAIN::.data 
+  () 
+  (emit-instruction .data))
+(defmethod MAIN::.data 
+  ((?subsection INTEGER)) 
+  (emit-instruction .data 
+                    ?subsection))
+(defmethod MAIN::.data 
+  ((?subsection INTEGER)
+   (?contents MULTIFIELD)) 
+  (make-scope (.data ?subsection) 
+              ?contents))
+(defmethod MAIN::.data 
+  ((?contents MULTIFIELD)) 
+  (make-scope (.data) 
+              ?contents))
+(defmethod MAIN::.data 
+  ($?contents)
+  (.data ?contents))
+(defmethod MAIN::.data 
+  ((?subsection INTEGER)
+   $?contents)
+  (.data ?subsection
+         ?contents))
+
+(defmethod MAIN::.bss
+  ((?symbol LEXEME)
+   (?length LEXEME
+            INTEGER)
+   (?align INTEGER))
+  (emit-instruction .bss
+                    ?symbol
+                    ?length
+                    ?align))
+
+(defmethod MAIN::.directive
+  "Emit a custom directive with zero type checking"
+  ((?name SYMBOL)
+   (?body STRING))
+  (format nil 
+          "%s %s"
+          ?name
+          ?body))
