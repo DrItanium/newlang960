@@ -1416,3 +1416,19 @@
               INTEGER))
   (emit-instruction .space 
                     ?capacity))
+(defmethod MAIN::.space
+  ((?capacity LEXEME
+              INTEGER)
+   (?fill LEXEME
+          INTEGER))
+  (emit-instruction .space
+                    ?capacity
+                    ?fill))
+
+(defmethod MAIN::.ascii
+  ((?string LEXEME))
+  (format nil ".ascii \"%s\"" ?string))
+(defmethod MAIN::.asciz
+  ((?string LEXEME))
+  (format nil ".asciz \"%s\"" ?string))
+
