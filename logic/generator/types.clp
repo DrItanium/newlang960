@@ -1328,3 +1328,29 @@
                     ?src1 
                     ?src2 
                     ?dest ))
+
+
+(defmethod MAIN::.label
+  ((?name SYMBOL))
+  (format nil "%s:" ?name))
+
+(defmethod MAIN::.word
+  ((?value NUMBER))
+  (format nil ".word %d" ?value))
+(defmethod MAIN::.word
+  ((?value LEXEME))
+  (format nil ".word %s" ?value))
+
+(defmethod MAIN::.word
+  ((?items MULTIFIELD))
+  (bind ?output
+        (create$))
+  (progn$ (?item ?items)
+          (bind ?output
+                ?output
+                (.word ?item)))
+  ?output)
+
+(defmethod MAIN::.word
+  ($?items)
+  (.word ?items))
