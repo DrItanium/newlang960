@@ -147,3 +147,84 @@
               ([lit30] of literal (value 30))
               ([lit31] of literal (value 31)))
 
+(defgeneric MAIN::emit-instruction)
+(defgeneric MAIN::addc)
+(defmethod MAIN::emit-instruction
+  ((?opcode LEXEME))
+  ?opcode)
+(defmethod MAIN::emit-instruction
+  ((?opcode LEXEME)
+   (?arg0 LEXEME
+          NUMBER))
+  (format nil 
+          "%s %s"
+          (str-cat ?opcode)
+          (str-cat ?arg0)))
+(defmethod MAIN::emit-instruction
+  ((?opcode LEXEME)
+   (?arg0 LEXEME
+          NUMBER)
+   (?arg1 LEXEME
+          NUMBER))
+  (format nil 
+          "%s %s, %s"
+          (str-cat ?opcode)
+          (str-cat ?arg0)
+          (str-cat ?arg1)))
+
+(defmethod MAIN::emit-instruction
+  ((?opcode LEXEME)
+   (?arg0 LEXEME
+          NUMBER)
+   (?arg1 LEXEME
+          NUMBER)
+   (?arg2 LEXEME
+          NUMBER))
+  (format nil 
+          "%s %s, %s, %s"
+          (str-cat ?opcode)
+          (str-cat ?arg0)
+          (str-cat ?arg1)
+          (str-cat ?arg2)))
+(defmethod MAIN::addc
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction addc
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+(defmethod MAIN::addi
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction addi
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::addo
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction addo
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::subc
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction subc
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
