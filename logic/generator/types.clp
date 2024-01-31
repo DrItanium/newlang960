@@ -1432,3 +1432,10 @@
   ((?string LEXEME))
   (format nil ".asciz \"%s\"" ?string))
 
+(defmethod MAIN::.declare
+  ((?name SYMBOL)
+   (?value LEXEME
+           NUMBER))
+  (format nil "%s = %s"
+          ?name
+          (send ?value to-string)))
