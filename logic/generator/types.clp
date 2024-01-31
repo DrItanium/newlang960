@@ -318,16 +318,6 @@
                     ?src1 
                     ?src2 
                     ?dest ))
-(defmethod MAIN::notand
-  ((?src1 register
-          literal)
-   (?src2 register
-          literal)
-   (?dest register))
-  (emit-instruction notand
-                    ?src1 
-                    ?src2 
-                    ?dest ))
 (defmethod MAIN::atadd
   ((?src/dest register)
    (?src register
@@ -849,3 +839,252 @@
 (defmethod MAIN::logr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logr ?src ?dest))
 (defmethod MAIN::logrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logrl ?src ?dest))
 (defmethod MAIN::mark () (emit-instruction mark))
+
+(defmethod MAIN::modac
+  ((?mask register
+          literal)
+   (?src register
+         literal)
+   (?dest register))
+  (emit-instruction modac
+                    ?mask
+                    ?src
+                    ?dest))
+(defmethod MAIN::modpc
+  ((?mask register
+          literal)
+   (?src register
+         literal)
+   (?dest register))
+  (emit-instruction modpc
+                    ?mask
+                    ?src
+                    ?dest))
+(defmethod MAIN::modtc
+  ((?mask register
+          literal)
+   (?src register
+         literal)
+   (?dest register))
+  (emit-instruction modtc
+                    ?mask
+                    ?src
+                    ?dest))
+(defmethod MAIN::modi
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction modi
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+
+(defmethod MAIN::modify*
+  ((?mask register
+          literal)
+   (?src register
+          literal)
+   (?src/dest register))
+  (emit-instruction modify
+                    ?mask 
+                    ?src 
+                    ?src/dest ))
+
+(defmethod MAIN::mov
+  ((?src register
+         literal)
+   (?dest register))
+  (emit-instruction mov
+                    ?src
+                    ?dest))
+(defmethod MAIN::movl
+  ((?src register
+         literal)
+   (?dest register))
+  (emit-instruction movl
+                    ?src
+                    ?dest))
+(defmethod MAIN::movt
+  ((?src register
+         literal)
+   (?dest register))
+  (emit-instruction movt
+                    ?src
+                    ?dest))
+(defmethod MAIN::movq
+  ((?src register
+         literal)
+   (?dest register))
+  (emit-instruction movq
+                    ?src
+                    ?dest))
+
+(defmethod MAIN::movqstr
+  ((?dst register)
+   (?src register)
+   (?len register
+         literal))
+  (emit-instruction movqstr
+                    ?dst
+                    ?src
+                    ?len))
+
+(defmethod MAIN::movr
+  ((?src register
+         float-register
+         float-literal)
+   (?dest register
+          float-register))
+  (emit-instruction movr
+                    ?src
+                    ?dest))
+(defmethod MAIN::movrl
+  ((?src register
+         float-register
+         float-literal)
+   (?dest register
+          float-register))
+  (emit-instruction movrl
+                    ?src
+                    ?dest))
+(defmethod MAIN::movre
+  ((?src register
+         float-register
+         float-literal)
+   (?dest register
+          float-register))
+  (emit-instruction movre
+                    ?src
+                    ?dest))
+
+(defmethod MAIN::movstr
+  ((?dst register)
+   (?src register)
+   (?len register
+         literal))
+  (emit-instruction movstr
+                    ?dst
+                    ?src
+                    ?len))
+(defmethod MAIN::muli
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction muli
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+
+(defmethod MAIN::mulo
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction mulo
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::mulr
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction mulr
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::mulrl
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction mulrl
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::nand
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction nand
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::nor
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction nor
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+
+(defmethod MAIN::notand
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction notand
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::not
+  ((?src register
+         literal)
+   (?dest register))
+  (emit-instruction not
+                    ?src
+                    ?dest))
+(defmethod MAIN::notbit
+  ((?bitpos register
+            literal)
+   (?src register
+         literal)
+   (?dest register))
+  (emit-instruction notbit
+                    ?bitpos
+                    ?src
+                    ?dest))
+
+(defmethod MAIN::notor
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction notor
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::ornot
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction ornot
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::or
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction or
+                    ?src1 
+                    ?src2 
+                    ?dest ))
