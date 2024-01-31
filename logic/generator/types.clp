@@ -81,6 +81,7 @@
         (visibility public)
         (storage local)
         (default ?NONE)))
+
 (defglobal MAIN
            ; quick access versions
            ?*freg* = (create$ float-register
@@ -1340,6 +1341,23 @@
 (defmethod MAIN::.word
   ((?value LEXEME))
   (format nil ".word %s" ?value))
+(defmethod MAIN::make-scope
+  ((?items MULTIFIELD))
+  ?items)
+(defmethod MAIN::make-scope
+  ($?items)
+  (make-scope ?items))
+
+(defmethod MAIN::named-scope
+  ((?name SYMBOL)
+   (?body MULTIFIELD))
+  (make-scope (.label ?name)
+              ?body))
+(defmethod MAIN::named-scope
+  ((?name SYMBOL)
+   $?body)
+  (named-scope ?name
+               ?body))
 (deffunction MAIN::generate-funcall-collection
              (?function $?items)
              (bind ?output
@@ -1362,9 +1380,9 @@
 (defmethod MAIN::.procedure
   ((?name SYMBOL)
    (?body MULTIFIELD))
-  (create$ (.label ?name)
-           ?body
-           (ret)))
+  (named-scope ?name
+               ?body
+               (ret)))
 (defmethod MAIN::.procedure
   ((?name SYMBOL)
    $?body)
@@ -1375,8 +1393,8 @@
   (emit-instruction .text))
 (defmethod MAIN::.text
   ((?contents MULTIFIELD))
-  (create$ (.text)
-           ?contents))
+  (make-scope (.text)
+              ?contents))
 (defmethod MAIN::.text
   ($?contents)
   (.text ?contents))
@@ -1392,3 +1410,9 @@
 (defmethod MAIN::.global
   ($?items)
   (.global ?items))
+
+(defmethod MAIN::.space
+  ((?capacity LEXEME
+              INTEGER))
+  (emit-instruction .space 
+                    ?capacity))
