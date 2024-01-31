@@ -1354,3 +1354,15 @@
 (defmethod MAIN::.word
   ($?items)
   (.word ?items))
+
+(defmethod MAIN::.procedure
+  ((?name SYMBOL)
+   (?body MULTIFIELD))
+  (create$ (.label ?name)
+           ?body
+           (ret)))
+(defmethod MAIN::.procedure
+  ((?name SYMBOL)
+   $?body)
+  (.procedure ?name
+              ?body))
