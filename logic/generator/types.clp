@@ -729,20 +729,26 @@
                     ?dest))
 (defmethod MAIN::divr
   ((?src1 register
-          literal)
-   (?src2 register
-          literal)
-   (?dest register))
+          float-register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest register
+          float-register))
   (emit-instruction divr
                     ?src1
                     ?src2
                     ?dest))
 (defmethod MAIN::divrl
   ((?src1 register
-          literal)
-   (?src2 register
-          literal)
-   (?dest register))
+          float-register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest register
+          float-register))
   (emit-instruction divrl
                     ?src1
                     ?src2
@@ -991,24 +997,30 @@
                     ?dest ))
 (defmethod MAIN::mulr
   ((?src1 register
-          literal)
-   (?src2 register
-          literal)
-   (?dest register))
+          float-register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest register
+          float-register))
   (emit-instruction mulr
-                    ?src1 
-                    ?src2 
-                    ?dest ))
+                    ?src1
+                    ?src2
+                    ?dest))
 (defmethod MAIN::mulrl
   ((?src1 register
-          literal)
-   (?src2 register
-          literal)
-   (?dest register))
+          float-register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest register
+          float-register))
   (emit-instruction mulrl
-                    ?src1 
-                    ?src2 
-                    ?dest ))
+                    ?src1
+                    ?src2
+                    ?dest))
 (defmethod MAIN::nand
   ((?src1 register
           literal)
@@ -1085,6 +1097,74 @@
           literal)
    (?dest register))
   (emit-instruction or
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::receive
+  ((?src register)
+   (?dest register))
+  (emit-instruction receive
+                    ?src
+                    ?dest))
+(defmethod MAIN::remi
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction remi
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::remo
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction remo
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::remr
+  ((?src1 register
+          float-register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest register
+          float-register))
+  (emit-instruction remr
+                    ?src1
+                    ?src2
+                    ?dest))
+(defmethod MAIN::remrl
+  ((?src1 register
+          float-register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest register
+          float-register))
+  (emit-instruction remrl
+                    ?src1
+                    ?src2
+                    ?dest))
+(defmethod MAIN::resumprcs
+  ((?src register))
+  (emit-instruction resumprcs
+                    ?src))
+
+(defmethod MAIN::ret () (emit-instruction ret))
+(defmethod MAIN::rotate
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction rotate
                     ?src1 
                     ?src2 
                     ?dest ))
