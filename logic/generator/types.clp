@@ -81,13 +81,26 @@
         (visibility public)
         (storage local)
         (default ?NONE)))
-
+(defglobal MAIN
+           ; quick access versions
+           ?*freg* = (create$ float-register
+                              register)
+           ?*freg/flit* = (create$ ?*freg*
+                                   float-literal)
+           ?*reg/lit* = (create$ register
+                                 literal)
+           ?*int/lex* = (create$ INTEGER
+                                 LEXEME))
 (defmessage-handler register to-string primary () (dynamic-get value))
 (defmessage-handler literal to-string primary () (str-cat (dynamic-get value)))
 (defmessage-handler float-literal to-string primary () (str-cat (dynamic-get value)))
 (defmessage-handler float-register to-string primary () (dynamic-get value))
 (defmessage-handler special-register to-string primary () (dynamic-get value))
 (definstances MAIN::declare-constants
+              (fp0 of float-register (value fp0))
+              (fp1 of float-register (value fp1))
+              (fp2 of float-register (value fp2))
+              (fp3 of float-register (value fp3))
               (g0 of register (value g0))
               (g1 of register (value g1))
               (g2 of register (value g2))
@@ -248,16 +261,6 @@
                     ?src2 
                     ?dest ))
 
-(defmethod MAIN::subc
-  ((?src1 register
-          literal)
-   (?src2 register
-          literal)
-   (?dest register))
-  (emit-instruction subc
-                    ?src1 
-                    ?src2 
-                    ?dest ))
 
 (defmethod MAIN::addr
   ((?src1 float-register
@@ -567,20 +570,20 @@
                     ?src2
                     ?len))
 
-(defmethod MAIN::cmpibe ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpibe ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpibne ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpibne ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpibl ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpibl ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpible ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpible ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpibg ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpibg ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpibge ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpibge ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpibo ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpibo ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpibno ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpibno ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpobe ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpobe ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpobne ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpobne ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpobl ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpobl ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpoble ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpoble ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpobg ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpobg ?src1 ?src2 ?targ))
-(defmethod MAIN::cmpobge ((?src1 register literal) (?src2 register) (?targ LEXEME INTEGER)) (emit-instruction cmpobge ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpibe ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpibe ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpibne ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpibne ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpibl ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpibl ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpible ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpible ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpibg ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpibg ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpibge ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpibge ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpibo ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpibo ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpibno ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpibno ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpobe ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpobe ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpobne ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpobne ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpobl ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpobl ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpoble ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpoble ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpobg ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpobg ?src1 ?src2 ?targ))
+(defmethod MAIN::cmpobge ((?src1 register literal) (?src2 register) (?targ INTEGER LEXEME)) (emit-instruction cmpobge ?src1 ?src2 ?targ))
 
 (defmethod MAIN::concmpi
   ((?src1 register
@@ -613,8 +616,6 @@
 
 (defmethod MAIN::cosr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction cosr ?src ?dest))
 (defmethod MAIN::cosrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction cosrl ?src ?dest))
-(defmethod MAIN::sinr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction sinr ?src ?dest))
-(defmethod MAIN::sinrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction sinrl ?src ?dest))
 (defmethod MAIN::tanr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction tanr ?src ?dest))
 (defmethod MAIN::tanrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction tanrl ?src ?dest))
 
@@ -1127,27 +1128,17 @@
                     ?src2 
                     ?dest ))
 (defmethod MAIN::remr
-  ((?src1 register
-          float-register
-          float-literal)
-   (?src2 float-register
-          register
-          float-literal)
-   (?dest register
-          float-register))
+  ((?src1 float-register float-literal register)
+   (?src2 float-register float-literal register)
+   (?dest float-register register))
   (emit-instruction remr
                     ?src1
                     ?src2
                     ?dest))
 (defmethod MAIN::remrl
-  ((?src1 register
-          float-register
-          float-literal)
-   (?src2 float-register
-          register
-          float-literal)
-   (?dest register
-          float-register))
+  ((?src1 float-register float-literal register)
+   (?src2 float-register float-literal register)
+   (?dest float-register register))
   (emit-instruction remrl
                     ?src1
                     ?src2
@@ -1159,12 +1150,115 @@
 
 (defmethod MAIN::ret () (emit-instruction ret))
 (defmethod MAIN::rotate
+  ((?src1 register literal)
+   (?src2 register literal)
+   (?dest register))
+  (emit-instruction rotate
+                    ?src1 
+                    ?src2 
+                    ?dest ))
+(defmethod MAIN::roundr ((?src float-register float-literal register) (?dest float-register register)) (emit-instruction roundr ?src ?dest))
+(defmethod MAIN::roundrl ((?src float-register float-literal register) (?dest float-register register)) (emit-instruction roundrl ?src ?dest))
+(defmethod MAIN::saverprcs () saveprcs)
+
+(defmethod MAIN::scaler
+  ((?src1 float-register float-literal register)
+   (?src2 float-register float-literal register)
+   (?dest float-register register))
+  (emit-instruction scaler
+                    ?src1
+                    ?src2
+                    ?dest))
+(defmethod MAIN::scalerl
+  ((?src1 float-register float-literal register)
+   (?src2 float-register float-literal register)
+   (?dest float-register register))
+  (emit-instruction scalerl
+                    ?src1
+                    ?src2
+                    ?dest))
+
+(defmethod MAIN::scanbit
+  ((?src register literal)
+   (?dest register))
+  (emit-instruction scanbit
+                    ?src
+                    ?dest))
+
+(defmethod MAIN::scanbyte
+  ((?src1 register literal)
+   (?src2 register literal))
+  (emit-instruction scanbyte
+                    ?src1
+                    ?src2))
+(defmethod MAIN::schedprcs
+  ((?src register))
+  (emit-instruction schedprcs
+                    ?src))
+(defmethod MAIN::send*
+  ((?dest register)
+   (?src1 register
+          literal)
+   (?src2 register))
+  (emit-instruction send
+                    ?dest
+                    ?src1
+                    ?src2))
+(defmethod MAIN::sendserv
+  ((?src register))
+  (emit-instruction sendserv
+                    ?src))
+(defmethod MAIN::setbit
+  ((?bitpos register
+            literal)
+   (?src register
+         literal)
+   (?dest register))
+  (emit-instruction setbit
+                    ?bitpos
+                    ?src
+                    ?dest))
+
+(defmethod MAIN::shlo ((?len register literal) (?src register literal) (?dest register)) (emit-instruction shlo ?len ?src ?dest))
+(defmethod MAIN::shro ((?len register literal) (?src register literal) (?dest register)) (emit-instruction shro ?len ?src ?dest))
+(defmethod MAIN::shli ((?len register literal) (?src register literal) (?dest register)) (emit-instruction shli ?len ?src ?dest))
+(defmethod MAIN::shri ((?len register literal) (?src register literal) (?dest register)) (emit-instruction shri ?len ?src ?dest))
+(defmethod MAIN::shrdi ((?len register literal) (?src register literal) (?dest register)) (emit-instruction shrdi ?len ?src ?dest))
+
+(defmethod MAIN::signal
+  ((?dest register))
+  (emit-instruction signal
+                    ?dest))
+
+(defmethod MAIN::sinr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction sinr ?src ?dest))
+(defmethod MAIN::sinrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction sinrl ?src ?dest))
+
+(defmethod MAIN::spanbit
+  ((?src register
+         literal)
+   (?dest register))
+  (emit-instruction spanbit
+                    ?src
+                    ?dest))
+(defmethod MAIN::sqrtr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction sqrtr ?src ?dest))
+(defmethod MAIN::sqrtrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction sqrtrl ?src ?dest))
+
+(defmethod MAIN::st ((?src register) (?dest LEXEME INTEGER)) (emit-instruction st ?src ?dest))
+(defmethod MAIN::stob ((?src register) (?dest LEXEME INTEGER)) (emit-instruction stob ?src ?dest))
+(defmethod MAIN::stos ((?src register) (?dest LEXEME INTEGER)) (emit-instruction stos ?src ?dest))
+(defmethod MAIN::stib ((?src register) (?dest LEXEME INTEGER)) (emit-instruction stib ?src ?dest))
+(defmethod MAIN::stis ((?src register) (?dest LEXEME INTEGER)) (emit-instruction stis ?src ?dest))
+(defmethod MAIN::stl ((?src register) (?dest LEXEME INTEGER)) (emit-instruction stl ?src ?dest))
+(defmethod MAIN::stt ((?src register) (?dest LEXEME INTEGER)) (emit-instruction stt ?src ?dest))
+(defmethod MAIN::stq ((?src register) (?dest LEXEME INTEGER)) (emit-instruction stq ?src ?dest))
+
+(defmethod MAIN::subc
   ((?src1 register
           literal)
    (?src2 register
           literal)
    (?dest register))
-  (emit-instruction rotate
+  (emit-instruction subc
                     ?src1 
                     ?src2 
                     ?dest ))
