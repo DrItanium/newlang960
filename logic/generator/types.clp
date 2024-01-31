@@ -329,12 +329,12 @@
                     ?src2 
                     ?dest ))
 (defmethod MAIN::atadd
-  ((?src/dst register)
+  ((?src/dest register)
    (?src register
          literal)
    (?dest register))
   (emit-instruction atadd
-                    ?src/dst 
+                    ?src/dest 
                     ?src 
                     ?dest ))
 
@@ -367,12 +367,12 @@
                     ?dest ))
 
 (defmethod MAIN::atmod
-  ((?src/dst register)
+  ((?src/dest register)
    (?src register
          literal)
    (?dest register))
   (emit-instruction atmod
-                    ?src/dst 
+                    ?src/dest 
                     ?src 
                     ?dest ))
 
@@ -611,22 +611,22 @@
 
 (defmethod MAIN::condrec
   ((?src register)
-   (?dst register))
+   (?dest register))
   (emit-instruction condrec
                     ?src
-                    ?dst))
+                    ?dest))
 
 (defmethod MAIN::condwait
   ((?src register))
   (emit-instruction condwait
                     ?src))
 
-(defmethod MAIN::cosr ((?src register float-register float-literal) (?dst register float-register)) (emit-instruction cosr ?src ?dest))
-(defmethod MAIN::cosrl ((?src register float-register float-literal) (?dst register float-register)) (emit-instruction cosrl ?src ?dest))
-(defmethod MAIN::sinr ((?src register float-register float-literal) (?dst register float-register)) (emit-instruction sinr ?src ?dest))
-(defmethod MAIN::sinrl ((?src register float-register float-literal) (?dst register float-register)) (emit-instruction sinrl ?src ?dest))
-(defmethod MAIN::tanr ((?src register float-register float-literal) (?dst register float-register)) (emit-instruction tanr ?src ?dest))
-(defmethod MAIN::tanrl ((?src register float-register float-literal) (?dst register float-register)) (emit-instruction tanrl ?src ?dest))
+(defmethod MAIN::cosr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction cosr ?src ?dest))
+(defmethod MAIN::cosrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction cosrl ?src ?dest))
+(defmethod MAIN::sinr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction sinr ?src ?dest))
+(defmethod MAIN::sinrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction sinrl ?src ?dest))
+(defmethod MAIN::tanr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction tanr ?src ?dest))
+(defmethod MAIN::tanrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction tanrl ?src ?dest))
 
 (defmethod MAIN::cpyrsre
   ((?src1 register 
@@ -757,3 +757,95 @@
                     ?src1
                     ?src2
                     ?dest))
+
+(defmethod MAIN::ediv
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction ediv
+                    ?src1
+                    ?src2
+                    ?dest))
+(defmethod MAIN::emul
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction emul
+                    ?src1
+                    ?src2
+                    ?dest))
+
+(defmethod MAIN::expr ((?src float-register float-literal register) (?dest float-register float-literal)) (emit-instruction expr ?src ?dest))
+(defmethod MAIN::exprl ((?src float-register float-literal register) (?dest float-register float-literal)) (emit-instruction exprl ?src ?dest))
+
+(defmethod MAIN::extract
+  ((?bitpos register
+            literal)
+   (?len register
+         literal)
+   (?src/dest register))
+  (emit-instruction extract
+                    ?bitpos
+                    ?len
+                    ?src/dest))
+
+(defmethod MAIN::faulte () (emit-instruction faulte))
+(defmethod MAIN::faultne () (emit-instruction faultne))
+(defmethod MAIN::faultl () (emit-instruction faultl))
+(defmethod MAIN::faultle () (emit-instruction faultle))
+(defmethod MAIN::faultg () (emit-instruction faultg))
+(defmethod MAIN::faultge () (emit-instruction faultge))
+(defmethod MAIN::faulto () (emit-instruction faulto))
+(defmethod MAIN::faultno () (emit-instruction faultno))
+
+(defmethod MAIN::fill
+  ((?dest register)
+   (?value register
+           literal)
+   (?len register
+         literal))
+  (emit-instruction fill
+                    ?dest
+                    ?value
+                    ?len))
+(defmethod MAIN::flushreg () (emit-instruction flushreg))
+(defmethod MAIN::fmark () (emit-instruction fmark))
+
+(defmethod MAIN::inspacc
+  ((?src register)
+   (?dest register))
+  (emit-instruction inspacc
+                    ?src
+                    ?dest))
+
+(defmethod MAIN::ld ((?src LEXEME INTEGER) (?dest register)) (emit-instruction ld ?src ?dest))
+(defmethod MAIN::ldob ((?src LEXEME INTEGER) (?dest register)) (emit-instruction ldob ?src ?dest))
+(defmethod MAIN::ldos ((?src LEXEME INTEGER) (?dest register)) (emit-instruction ldos ?src ?dest))
+(defmethod MAIN::ldib ((?src LEXEME INTEGER) (?dest register)) (emit-instruction ldib ?src ?dest))
+(defmethod MAIN::ldis ((?src LEXEME INTEGER) (?dest register)) (emit-instruction ldis ?src ?dest))
+(defmethod MAIN::ldl ((?src LEXEME INTEGER) (?dest register)) (emit-instruction ldl ?src ?dest))
+(defmethod MAIN::ldt ((?src LEXEME INTEGER) (?dest register)) (emit-instruction ldt ?src ?dest))
+(defmethod MAIN::ldq ((?src LEXEME INTEGER) (?dest register)) (emit-instruction ldq ?src ?dest))
+(defmethod MAIN::lda ((?src LEXEME INTEGER) (?dest register)) (emit-instruction lda ?src ?dest))
+(defmethod MAIN::ldphy
+  ((?src register)
+   (?dest register))
+  (emit-instruction ldphy
+                    ?src
+                    ?dest))
+(defmethod MAIN::ldtime
+  ((?dest register))
+  (emit-instruction ldtime
+                    ?dest))
+   
+(defmethod MAIN::logbnr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logbnr ?src ?dest))
+(defmethod MAIN::logbnrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logbnrl ?src ?dest))
+(defmethod MAIN::logepr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logepr ?src ?dest))
+(defmethod MAIN::logeprl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logeprl ?src ?dest))
+(defmethod MAIN::logr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logr ?src ?dest))
+(defmethod MAIN::logrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logrl ?src ?dest))
+(defmethod MAIN::mark () (emit-instruction mark))
