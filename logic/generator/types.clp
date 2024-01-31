@@ -228,3 +228,159 @@
                     (send ?src1 get-value)
                     (send ?src2 get-value)
                     (send ?dest get-value)))
+
+(defmethod MAIN::addr
+  ((?src1 float-register
+          register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest float-register
+          register))
+  (emit-instruction addr
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::addrl
+  ((?src1 float-register
+          register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest float-register
+          register))
+  (emit-instruction addrl
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::alterbit
+  ((?bitpos register
+            literal)
+   (?src register
+         literal)
+   (?dest register))
+  (emit-instruction alterbit
+                    ?bitpos
+                    ?src
+                    ?dest))
+(defmethod MAIN::and
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction and
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::andnot
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction andnot
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+(defmethod MAIN::notand
+  ((?src1 register
+          literal)
+   (?src2 register
+          literal)
+   (?dest register))
+  (emit-instruction notand
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+(defmethod MAIN::atadd
+  ((?src/dst register)
+   (?src register
+         literal)
+   (?dest register))
+  (emit-instruction atadd
+                    (send ?src/dst get-value)
+                    (send ?src get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::atanr
+  ((?src1 float-register
+          register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest float-register
+          register))
+  (emit-instruction atanr
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::atanrl
+  ((?src1 float-register
+          register
+          float-literal)
+   (?src2 float-register
+          register
+          float-literal)
+   (?dest float-register
+          register))
+  (emit-instruction atanrl
+                    (send ?src1 get-value)
+                    (send ?src2 get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::atmod
+  ((?src/dst register)
+   (?src register
+         literal)
+   (?dest register))
+  (emit-instruction atmod
+                    (send ?src/dst get-value)
+                    (send ?src get-value)
+                    (send ?dest get-value)))
+
+(defmethod MAIN::b
+  ((?targ LEXEME))
+  (emit-instruction b 
+                    ?targ))
+(defmethod MAIN::bx
+  ((?targ LEXEME))
+  (emit-instruction bx
+                    ?targ))
+
+(defmethod MAIN::bal
+  ((?targ LEXEME))
+  (emit-instruction bal
+                    ?targ))
+(defmethod MAIN::balx
+  ((?targ LEXEME)
+   (?dest register))
+  (emit-instruction balx
+                    ?targ
+                    (send ?dest get-value)))
+
+(defmethod MAIN::bbc
+  ((?bitpos register
+            literal)
+   (?src register)
+   (?targ LEXEME))
+  (emit-instruction bbc
+                    (send ?bitpos get-value)
+                    (send ?src get-value)
+                    ?targ))
+(defmethod MAIN::bbs
+  ((?bitpos register
+            literal)
+   (?src register)
+   (?targ LEXEME))
+  (emit-instruction bbs
+                    (send ?bitpos get-value)
+                    (send ?src get-value)
+                    ?targ))
