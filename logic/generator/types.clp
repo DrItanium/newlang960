@@ -1340,16 +1340,20 @@
 (defmethod MAIN::.word
   ((?value LEXEME))
   (format nil ".word %s" ?value))
-
+(deffunction MAIN::generate-funcall-collection
+             (?function $?items)
+             (bind ?output
+                   (create$))
+             (progn$ (?item ?items)
+                     (bind ?output
+                           ?output
+                           (funcall ?function
+                                    ?item)))
+             ?output)
 (defmethod MAIN::.word
   ((?items MULTIFIELD))
-  (bind ?output
-        (create$))
-  (progn$ (?item ?items)
-          (bind ?output
-                ?output
-                (.word ?item)))
-  ?output)
+  (generate-funcall-collection .word
+                               ?items))
 
 (defmethod MAIN::.word
   ($?items)
@@ -1366,3 +1370,25 @@
    $?body)
   (.procedure ?name
               ?body))
+(defmethod MAIN::.text
+  ()
+  (emit-instruction .text))
+(defmethod MAIN::.text
+  ((?contents MULTIFIELD))
+  (create$ (.text)
+           ?contents))
+(defmethod MAIN::.text
+  ($?contents)
+  (.text ?contents))
+
+(defmethod MAIN::.global
+  ((?title SYMBOL))
+  (emit-instruction .global
+                    ?title))
+(defmethod MAIN::.global
+  ((?items MULTIFIELD))
+  (generate-funcall-collection .global
+                               ?items))
+(defmethod MAIN::.global
+  ($?items)
+  (.global ?items))
