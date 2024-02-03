@@ -39,15 +39,9 @@
              (set-dynamic-constraint-checking TRUE)
 ;             (printout stdout "donuts" crlf)
              )
-
-; declare stages
-;(deffacts MAIN::stages
-;          (stage (current optimization-stage1)
-;                 (rest flatten
-;                   discovery
-;                   correlate
-;                   cleanup
-;                   display)))
+(defglobal MAIN
+           ?*modules* = (create$ LispParser
+                                 LanguageGenerator))
 ;
 ; deffacts/objects etc
 ; rules include
@@ -59,6 +53,5 @@
 (defrule MAIN::startup
          (declare (salience 10000))
          =>
-         (focus LispParser
-                LanguageGenerator))
+         (focus (expand$ ?*modules*)))
 

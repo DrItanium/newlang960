@@ -174,61 +174,51 @@
               ([lit31] of literal (value 31)))
 
 (defgeneric MAIN::emit-instruction)
-(defgeneric MAIN::addc)
+(defgeneric MAIN::join-string)
+(defmethod MAIN::join-string
+  ((?character LEXEME)
+   (?first LEXEME
+           NUMBER
+           INSTANCE)
+   (?rest MULTIFIELD))
+  (bind ?output
+        (send ?first
+              to-string))
+  (progn$ (?item ?rest)
+          (bind ?output
+                ?output
+                ?character
+                (send ?item
+                      to-string)))
+  (if (multifieldp ?output) then
+    (str-cat (expand$ ?output))
+    else 
+    ?output))
+(defmethod MAIN::join-string
+  ((?character LEXEME)
+   (?first LEXEME
+           NUMBER
+           INSTANCE)
+   $?rest)
+  (join-string ?character
+               ?first
+               ?rest))
 (defmethod MAIN::emit-instruction
   ((?opcode LEXEME))
   ?opcode)
 (defmethod MAIN::emit-instruction
   ((?opcode LEXEME)
-   (?arg0 LEXEME
-          NUMBER
-          INSTANCE))
-  (format nil 
+   (?args MULTIFIELD))
+  (format nil
           "%s %s"
           ?opcode
-          (send ?arg0 to-string)))
+          (join-string , (expand$ ?args))))
 (defmethod MAIN::emit-instruction
   ((?opcode LEXEME)
-   (?arg0 INSTANCE))
+   $?args)
   (emit-instruction ?opcode
-                    (send ?arg0 
-                          get-value)))
-(defmethod MAIN::emit-instruction
-  ((?opcode LEXEME)
-   (?arg0 LEXEME
-          NUMBER
-          INSTANCE)
-   (?arg1 LEXEME
-          NUMBER
-          INSTANCE))
-  (format nil 
-          "%s %s, %s"
-          ?opcode
-          (send ?arg0
-                to-string)
-          (send ?arg1
-                to-string)))
+                    ?args))
 
-(defmethod MAIN::emit-instruction
-  ((?opcode LEXEME)
-   (?arg0 LEXEME
-          NUMBER
-          INSTANCE)
-   (?arg1 LEXEME
-          NUMBER
-          INSTANCE)
-   (?arg2 LEXEME
-          NUMBER
-          INSTANCE))
-  (format nil 
-          "%s %s, %s, %s"
-          ?opcode
-          (send ?arg0
-                to-string)
-          (send ?arg1
-                to-string)
-          (send ?arg2
-                to-string)))
 
 (defmethod MAIN::addc
   ((?src1 register
@@ -1498,15 +1488,3 @@
           ?name
           ?body))
 
-(defmethod MAIN::.comment
-  ((?text STRING))
-  (format nil 
-          "# %s"
-          ?text))
-(defmethod MAIN::.comment
-  ((?text MULTIFIELD))
-  (.comment (implode$ ?text)))
-(defmethod MAIN::.comment
-  ($?text)
-  (.comment ?text))
-          
