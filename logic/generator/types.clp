@@ -172,37 +172,7 @@
               ([lit29] of literal (value 29))
               ([lit30] of literal (value 30))
               ([lit31] of literal (value 31)))
-
 (defgeneric MAIN::emit-instruction)
-(defgeneric MAIN::join-string)
-(defmethod MAIN::join-string
-  ((?character LEXEME)
-   (?first LEXEME
-           NUMBER
-           INSTANCE)
-   (?rest MULTIFIELD))
-  (bind ?output
-        (send ?first
-              to-string))
-  (progn$ (?item ?rest)
-          (bind ?output
-                ?output
-                ?character
-                (send ?item
-                      to-string)))
-  (if (multifieldp ?output) then
-    (str-cat (expand$ ?output))
-    else 
-    ?output))
-(defmethod MAIN::join-string
-  ((?character LEXEME)
-   (?first LEXEME
-           NUMBER
-           INSTANCE)
-   $?rest)
-  (join-string ?character
-               ?first
-               ?rest))
 (defmethod MAIN::emit-instruction
   ((?opcode LEXEME))
   ?opcode)
@@ -212,13 +182,13 @@
   (format nil
           "%s %s"
           ?opcode
-          (join-string , (expand$ ?args))))
+          (join-string , 
+                       (expand$ ?args))))
 (defmethod MAIN::emit-instruction
   ((?opcode LEXEME)
    $?args)
   (emit-instruction ?opcode
                     ?args))
-
 
 (defmethod MAIN::addc
   ((?src1 register
@@ -1487,4 +1457,3 @@
           "%s %s"
           ?name
           ?body))
-

@@ -46,3 +46,17 @@
         (visibility public)))
 
 
+(deffunction MAIN::join-string
+             (?character ?first $?elements)
+             (bind ?output
+                   ?first)
+             (progn$ (?item ?elements)
+                     (bind ?output
+                           ?output
+                           ?character
+                           ?item))
+             (if (multifieldp ?output) then
+               (str-cat (expand$ ?output))
+               else
+               ?output))
+
