@@ -44,6 +44,11 @@
         (type LEXEME)
         (storage local)
         (visibility public)))
+(defclass MAIN::has-children
+  (is-a USER)
+  (multislot children
+             (storage local)
+             (visibility public)))
 
 
 (deffunction MAIN::join-string
@@ -60,3 +65,7 @@
                else
                ?output))
 
+(defclass MAIN::expression
+  (is-a has-parent
+        has-children))
+  

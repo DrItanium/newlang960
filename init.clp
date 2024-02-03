@@ -24,13 +24,8 @@
 (defmodule MAIN
            (export ?ALL))
 ; include modules
-(include logic/parser/module.clp)
-(include logic/language/module.clp)
 ; include types
 (include logic/common/types.clp)
-(include logic/stages/types.clp)
-(include logic/parser/types.clp)
-(include logic/language/types.clp)
 (include logic/generator/types.clp)
 
 
@@ -39,19 +34,9 @@
              (set-dynamic-constraint-checking TRUE)
 ;             (printout stdout "donuts" crlf)
              )
-(defglobal MAIN
-           ?*modules* = (create$ LispParser
-                                 LanguageGenerator))
 ;
 ; deffacts/objects etc
 ; rules include
 ; 
 
 ; one type of declaration expression
-(include logic/parser/logic.clp)
-(include logic/language/logic.clp)
-(defrule MAIN::startup
-         (declare (salience 10000))
-         =>
-         (focus (expand$ ?*modules*)))
-

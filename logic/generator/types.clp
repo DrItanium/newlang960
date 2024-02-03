@@ -428,7 +428,7 @@
   (emit-instruction cmpi
                     ?src1
                     ?src2))
-   
+
 
 (defmethod MAIN::cmpo
   ((?src1 register
@@ -797,7 +797,7 @@
   ((?dest register))
   (emit-instruction ldtime
                     ?dest))
-   
+
 (defmethod MAIN::logbnr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logbnr ?src ?dest))
 (defmethod MAIN::logbnrl ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logbnrl ?src ?dest))
 (defmethod MAIN::logepr ((?src register float-register float-literal) (?dest register float-register)) (emit-instruction logepr ?src ?dest))
@@ -851,7 +851,7 @@
   ((?mask register
           literal)
    (?src register
-          literal)
+         literal)
    (?src/dest register))
   (emit-instruction modify
                     ?mask 
@@ -1337,17 +1337,6 @@
   ($?items)
   (.word ?items))
 
-(defmethod MAIN::.procedure
-  ((?name SYMBOL)
-   (?body MULTIFIELD))
-  (named-scope ?name
-               ?body
-               (ret)))
-(defmethod MAIN::.procedure
-  ((?name SYMBOL)
-   $?body)
-  (.procedure ?name
-              ?body))
 
 (defmethod MAIN::.global
   ((?title SYMBOL))
@@ -1460,3 +1449,26 @@
    $?body)
   (.directive ?name 
               ?body))
+
+; ---- layered operations ----
+(defclass MAIN::named-expression
+  (is-a expression
+        has-title))
+
+(defclass MAIN::procedure
+  (is-a named-expression)
+  (slot visibility))
+
+
+(defmethod MAIN::defprocedure
+  ((?name SYMBOL)
+   (?body MULTIFIELD))
+  (named-scope ?name
+               ?body
+               (ret)))
+(defmethod MAIN::defprocedure
+  ((?name SYMBOL)
+   $?body)
+  (defprocedure ?name
+                ?body))
+
