@@ -1452,8 +1452,11 @@
 (defmethod MAIN::.directive
   "Emit a custom directive with zero type checking"
   ((?name SYMBOL)
-   (?body STRING))
-  (format nil 
-          "%s %s"
-          ?name
-          ?body))
+   (?body MULTIFIELD))
+  (emit-instruction ?name
+                    ?body))
+(defmethod MAIN::.directive
+  ((?name SYMBOL)
+   $?body)
+  (.directive ?name 
+              ?body))
