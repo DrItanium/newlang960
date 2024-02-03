@@ -1497,3 +1497,16 @@
           "%s %s"
           ?name
           ?body))
+
+(defmethod MAIN::.comment
+  ((?text STRING))
+  (format nil 
+          "# %s"
+          ?text))
+(defmethod MAIN::.comment
+  ((?text MULTIFIELD))
+  (.comment (implode$ ?text)))
+(defmethod MAIN::.comment
+  ($?text)
+  (.comment ?text))
+          
