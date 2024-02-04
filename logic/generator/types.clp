@@ -1529,7 +1529,7 @@
 ; ----- ip manipulation routines -----
 ; After looking at how GCC defines branch operations I have a good idea how to describe branch operations
 ; All branch operations return an address and assign it to the ip special-register
-
+; By expanding the type set we can actually write a language generator which uses this library to generate instructions
 ; ----- boot services operations -----
 
 (defmethod MAIN::save-globals
