@@ -1544,4 +1544,16 @@
               (ldq "-48(sp)" [g4])
               (ldq "-32(sp)" [g8])
               (ldt "-16(sp)" [g12])))
-
+(defmethod MAIN::preserve-globals
+  ((?temporary register)
+   (?body MULTIFIELD))
+  (make-scope (save-globals ?temporary)
+              ?body
+              (restore-globals)))
+(defmethod MAIN::preserve-globals
+  ((?temporary register)
+   $?body)
+  (preserve-globals ?temporary
+                    ?body))
+   
+   
