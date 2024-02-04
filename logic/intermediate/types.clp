@@ -54,10 +54,11 @@
 ; - arithmetic expressions
 
 ; looking at the GCC code, pretty much everything is a set operation of some kind
-(defclass MAIN::set-expression
-  (is-a expression)
-  (slot target
-        (type INSTANCE)
-        (storage local)
-        (visibility public)
-        (default ?NONE)))
+
+
+; we define condition codes as the result of a compare operation. Then a check operation is applied to the condition code to see if it is true or not. 
+; So (> ?a ?b) becomes (set [cc0] (> ?a ?b)) which we then do (if (lt [cc0])
+; then ... else ...) which just takes a look at the resulting pattern to see if
+; less than is satisfied (at least conceptually). 
+; 
+; The bit types are also important as well, I want them to be the boolean values which can only be checked, cleared, set, cleared, inverted, and altered.
