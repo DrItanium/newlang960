@@ -1599,5 +1599,16 @@
                             (ldconst 0x3b001000 [g0])
                             (st [g0] "-12(fp)") ; store a contrived ac
               )))
-
-
+(defclass MAIN::expression-metadata
+  (is-a has-parent)
+  (slot file-name
+        (type LEXEME)
+        (default ?NONE))
+  (slot line-number
+        (type INTEGER)
+        (range 1 ?VARIABLE)
+        (default ?NONE))
+  (slot column-offset
+        (type INTEGER)
+        (range 1 ?VARIABLE)
+        (default ?NONE)))
