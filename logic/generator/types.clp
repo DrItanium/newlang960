@@ -26,7 +26,7 @@
 (defmessage-handler LEXEME to-string primary
                     ()
                     ?self)
-        
+
 (defclass MAIN::register
   (is-a USER)
   (slot value
@@ -1482,7 +1482,7 @@
          [lit0]
          ?dest))
 
-   
+
 (defmethod MAIN::mov
   ((?src SYMBOL
          (eq ?current-argument
@@ -1558,10 +1558,36 @@
 
 
 (defmethod MAIN::definterrupt-vector
-    ((?name SYMBOL)
-     (?fn SYMBOL))
-    (make-scope (.global ?name)
-                (defprocedure ?name
-                              (preserve-globals [r4]
-                                                (ldconst 0 [g14])
-                                                (call ?fn)))))
+  ((?name SYMBOL)
+   (?fn SYMBOL))
+  (defprocedure ?name
+                (preserve-globals [r4]
+                                  (ldconst 0 [g14])
+                                  (call ?fn))))
+(defmethod MAIN::deffault-dispatcher
+  ((?name SYMBOL)
+   (?fn SYMBOL))
+  (defprocedure ?name
+                (lda "-48(fp)" 
+                     [g0])
+                (callx ?fn)
+                (flushreg)))
+
+; ----- boot services operations -----
+(defmethod MAIN::.align
+  ((?alignment INTEGER))
+  (emit-instruction .align
+                    ?alignment))
+(defmethod MAIN::emit-fix-stack
+  ()
+  (make-scope (.align 6)
+              (defprocedure fix_stack
+                            (flushreg)
+                            (or [pfp] [lit7] [pfp]) ; put interrupt return code into pfp
+                            (ldconst 0x1f0002 [g0])
+                            (st [g0] "-16(fp)") ; store a contrived pc
+                            (ldconst 0x3b001000 [g0])
+                            (st [g0] "-12(fp)") ; store a contrived ac
+              )))
+
+
