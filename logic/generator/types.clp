@@ -1526,8 +1526,9 @@
   (modpc ?src
          ?src
          ?src))
-
-
+; ----- ip manipulation routines -----
+; After looking at how GCC defines branch operations I have a good idea how to describe branch operations
+; All branch operations return an address and assign it to the ip special-register
 
 ; ----- boot services operations -----
 
