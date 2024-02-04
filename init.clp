@@ -24,6 +24,7 @@
 (defmodule MAIN
            (export ?ALL))
 ; include modules
+(include logic/generator/module.clp)
 ; include types
 (include logic/common/types.clp)
 (include logic/generator/types.clp)
@@ -38,5 +39,9 @@
 ; deffacts/objects etc
 ; rules include
 ; 
-
+(include logic/generator/logic.clp)
 ; one type of declaration expression
+(defrule MAIN::startup
+         (declare (salience 10000))
+         =>
+         (focus ExpressionLowering))

@@ -23,9 +23,10 @@
 
 (defrule ExpressionLowering::binary-expression-forms-are-not-compatible
          "Given some binary expression, make sure that the types are the same"
+         (declare (salience 10000))
          (object (is-a expression)
                  (name ?expr)
-                 (children ?
+                 (children ?opcode
                            ?a 
                            ?b))
          (object (is-a expression)
@@ -39,6 +40,9 @@
                  (file-name ?file)
                  (line-number ?ln)
                  (column-offset ?c))
+         (not (special-binary-operation-description (arg0-kind ?kind)
+                                                    (arg1-kind ?kind2)
+                                                    (operation ?opcode)))
          =>
          ; @todo expand diagnostics
          (format stderr
@@ -49,3 +53,45 @@
                  ?kind
                  ?kind2)
          (halt))
+; already this is working very well, I can easily just generate appropriate expressions as needed
+(defrule ExpressionLowering::describe-binary-operation-return-kind-general-case
+         (object (is-a expression)
+                 (name ?expr)
+                 (children ?opcode
+                           ?a 
+                           ?b))
+         (object (is-a expression)
+                 (name ?a)
+                 (children ? ?kind))
+         (object (is-a expression)
+                 (name ?b)
+                 (children ? ?kind))
+         (not (special-binary-operation-description (arg0-kind ?kind)
+                                                    (arg1-kind ?kind)
+                                                    (operation ?opcode)))
+                                                    
+         =>
+         (assert (expression-returns (target ?expr)
+                                     (kind ?kind))))
+
+         
+(defrule ExpressionLowering::describe-binary-operation-return-special-form
+         (object (is-a expression)
+                 (name ?expr)
+                 (children ?opcode
+                           ?a 
+                           ?b))
+         (object (is-a expression)
+                 (name ?a)
+                 (children ? ?kind))
+         (object (is-a expression)
+                 (name ?b)
+                 (children ? ?kind2))
+         (special-binary-operation-description (arg0-kind ?kind)
+                                               (arg1-kind ?kind2)
+                                               (operation ?opcode)
+                                               (resultant-kind ?result))
+                                                    
+         =>
+         (assert (expression-returns (target ?expr)
+                                     (kind ?result))))

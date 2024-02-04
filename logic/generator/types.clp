@@ -1612,3 +1612,43 @@
         (type INTEGER)
         (range 1 ?VARIABLE)
         (default ?NONE)))
+
+(deftemplate MAIN::expression-returns
+             (slot target
+                   (type INSTANCE)
+                   (default ?NONE))
+             (slot kind
+                   (type LEXEME)
+                   (default ?NONE)))
+(deftemplate ExpressionLowering::special-binary-operation-description
+             (slot arg0-kind
+                   (type LEXEME)
+                   (default ?NONE))
+             (slot arg1-kind
+                   (type LEXEME)
+                   (default ?NONE))
+             (slot operation
+                   (type LEXEME)
+                   (default ?NONE))
+             (slot resultant-kind
+                   (type LEXEME)
+                   (default ?NONE)))
+(deffacts ExpressionLowering::special-binary-op-forms
+          (special-binary-operation-description (arg0-kind ordinal)
+                                                (arg1-kind ordinal)
+                                                (operation compare)
+                                                (resultant-kind condition-code))
+          (special-binary-operation-description (arg0-kind integer)
+                                                (arg1-kind integer)
+                                                (operation compare)
+                                                (resultant-kind condition-code))
+          (special-binary-operation-description (arg0-kind real)
+                                                (arg1-kind real)
+                                                (operation compare)
+                                                (resultant-kind condition-code))
+          (special-binary-operation-description (arg0-kind long-real)
+                                                (arg1-kind long-real)
+                                                (operation compare)
+                                                (resultant-kind condition-code))
+    )
+
