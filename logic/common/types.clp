@@ -69,3 +69,27 @@
   (is-a has-parent
         has-children))
   
+(defclass MAIN::named-expression
+  (is-a expression
+        has-title))
+
+(deffunction MAIN::apply$
+             (?function $?arguments)
+             (bind ?output
+                   (create$))
+             (progn$ (?arg ?arguments)
+                     (bind ?output
+                           ?output
+                           (funcall ?function ?arg)))
+
+             ?output)
+(deffunction MAIN::apply-message$
+             (?message $?arguments)
+             (bind ?output
+                   (create$))
+             (progn$ (?arg ?arguments)
+                     (bind ?output
+                           ?output
+                           (send ?arg 
+                                 ?message)))
+             ?output)

@@ -26,7 +26,7 @@
 (defmessage-handler LEXEME to-string primary
                     ()
                     ?self)
-
+        
 (defclass MAIN::register
   (is-a USER)
   (slot value
@@ -43,6 +43,7 @@
         (visibility public)
         (storage local)
         (default ?NONE)))
+
 (defclass MAIN::literal
   (is-a USER)
   (slot value
@@ -182,8 +183,9 @@
   (format nil
           "%s %s"
           ?opcode
-          (join-string , 
-                       (expand$ ?args))))
+          (join-string ,
+                       (expand$ (apply-message$ to-string
+                                                ?args)))))
 (defmethod MAIN::emit-instruction
   ((?opcode LEXEME)
    $?args)
@@ -1450,14 +1452,13 @@
   (.directive ?name 
               ?body))
 
+(defmethod MAIN::ldconst
+  ((?value INTEGER)
+   (?dest register))
+  (emit-instruction ldconst
+                    ?value
+                    ?dest))
 ; ---- layered operations ----
-(defclass MAIN::named-expression
-  (is-a expression
-        has-title))
-
-(defclass MAIN::procedure
-  (is-a named-expression)
-  (slot visibility))
 
 
 (defmethod MAIN::defprocedure
@@ -1471,4 +1472,30 @@
    $?body)
   (defprocedure ?name
                 ?body))
+(defmethod MAIN::mov
+  ((?src SYMBOL
+         (eq ?current-argument
+             ac))
+   (?dest register))
+  (modac [lit0]
+         [lit0]
+         ?dest))
 
+   
+(defmethod MAIN::mov
+  ((?src SYMBOL
+         (eq ?current-argument
+             tc))
+   (?dest register))
+  (modtc [lit0]
+         [lit0]
+         ?dest))
+
+(defmethod MAIN::mov
+  ((?src SYMBOL
+         (eq ?current-argument
+             pc))
+   (?dest register))
+  (modpc [lit0]
+         [lit0]
+         ?dest))
