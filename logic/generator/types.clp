@@ -1474,9 +1474,9 @@
   (defprocedure ?name
                 ?body))
 (defmethod MAIN::mov
-  ((?src SYMBOL
+  ((?src special-register
          (eq ?current-argument
-             ac))
+             [ac]))
    (?dest register))
   (modac [lit0]
          [lit0]
@@ -1484,18 +1484,18 @@
 
 
 (defmethod MAIN::mov
-  ((?src SYMBOL
+  ((?src special-register
          (eq ?current-argument
-             tc))
+             [tc]))
    (?dest register))
   (modtc [lit0]
          [lit0]
          ?dest))
 
 (defmethod MAIN::mov
-  ((?src SYMBOL
+  ((?src special-register 
          (eq ?current-argument
-             pc))
+             [pc]))
    (?dest register))
   (modpc [lit0]
          [lit0]
@@ -1503,29 +1503,33 @@
 
 (defmethod MAIN::mov
   ((?src register)
-   (?dest SYMBOL
+   (?dest special-register 
           (eq ?current-argument
-              ac)))
+              [ac])))
   (modac ?src
          ?src
          ?src))
 
 (defmethod MAIN::mov
   ((?src register)
-   (?dest SYMBOL
+   (?dest special-register 
           (eq ?current-argument
-              tc)))
+              [tc])))
   (modtc ?src
          ?src
          ?src))
 (defmethod MAIN::mov
   ((?src register)
-   (?dest SYMBOL
+   (?dest special-register 
           (eq ?current-argument
-              pc)))
+              [pc])))
   (modpc ?src
          ?src
          ?src))
+
+
+
+; ----- boot services operations -----
 
 (defmethod MAIN::save-globals
   ((?temporary register))
@@ -1555,8 +1559,6 @@
    $?body)
   (preserve-globals ?temporary
                     ?body))
-
-
 (defmethod MAIN::definterrupt-vector
   ((?name SYMBOL)
    (?fn SYMBOL))
@@ -1572,8 +1574,6 @@
                      [g0])
                 (callx ?fn)
                 (flushreg)))
-
-; ----- boot services operations -----
 (defmethod MAIN::.align
   ((?alignment INTEGER))
   (emit-instruction .align
