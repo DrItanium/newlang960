@@ -1555,5 +1555,13 @@
    $?body)
   (preserve-globals ?temporary
                     ?body))
-   
-   
+
+
+(defmethod MAIN::definterrupt-vector
+    ((?name SYMBOL)
+     (?fn SYMBOL))
+    (make-scope (.global ?name)
+                (defprocedure ?name
+                              (preserve-globals [r4]
+                                                (ldconst 0 [g14])
+                                                (call ?fn)))))
