@@ -1453,7 +1453,8 @@
               ?body))
 
 (defmethod MAIN::ldconst
-  ((?value INTEGER)
+  ((?value INTEGER
+           LEXEME)
    (?dest register))
   (emit-instruction ldconst
                     ?value
@@ -1499,3 +1500,48 @@
   (modpc [lit0]
          [lit0]
          ?dest))
+
+(defmethod MAIN::mov
+  ((?src register)
+   (?dest SYMBOL
+          (eq ?current-argument
+              ac)))
+  (modac ?src
+         ?src
+         ?src))
+
+(defmethod MAIN::mov
+  ((?src register)
+   (?dest SYMBOL
+          (eq ?current-argument
+              tc)))
+  (modtc ?src
+         ?src
+         ?src))
+(defmethod MAIN::mov
+  ((?src register)
+   (?dest SYMBOL
+          (eq ?current-argument
+              pc)))
+  (modpc ?src
+         ?src
+         ?src))
+
+(defmethod MAIN::save-globals
+  ((?temporary register))
+  (make-scope (ldconst 64 
+                       ?temporary)
+              (addo [sp]
+                    ?temporary
+                    [sp])
+              (stq [g0] "-64(sp)")
+              (stq [g4] "-48(sp)")
+              (stq [g8] "-32(sp)")
+              (stt [g12] "-16(sp)")))
+(defmethod MAIN::restore-globals
+  ()
+  (make-scope (ldq "-64(sp)" [g0])
+              (ldq "-48(sp)" [g4])
+              (ldq "-32(sp)" [g8])
+              (ldt "-16(sp)" [g12])))
+
