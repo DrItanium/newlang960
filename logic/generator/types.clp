@@ -1526,6 +1526,12 @@
   (modpc ?src
          ?src
          ?src))
+(defmethod MAIN::mov
+  ((?src LEXEME)
+   (?dest special-register
+          (eq ?current-argument
+              [ip])))
+  (bx ?src))
 ; ----- ip manipulation routines -----
 ; After looking at how GCC defines branch operations I have a good idea how to describe branch operations
 ; All branch operations return an address and assign it to the ip special-register

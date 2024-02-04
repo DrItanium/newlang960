@@ -20,3 +20,44 @@
 ; ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+; The intermediate language is equivalent to LLVM bitcode or GCC IR. The difference is that I am 
+; building this up like was done for assembly level coverage. We have different modules which are 
+; used to select what kind of actions to generate
+;
+; It also is far more expressive in the available types to better map to what the i960 can do. 
+; It also makes it trivial to build up the expression lists as we go along.
+;
+; For example, an absolute branch is really
+; (set [ip] ?address)
+; a relative branch is:
+; (set [ip] (+ [ip] ?displacement))
+;
+; More specifically, address and displacement are physical types as well.
+; A conditional relative branch is:
+;
+; (if ?cond then (set [ip] (+ [ip] ?displacement)))
+; it can also be 
+; (set [ip] (if ?cond then (+ [ip] ?displacement))) 
+;
+; but this second form is more consistent but has some implicit declarations...
+;
+; If everything comes in the form of set expressions then a bunch of operations become even easier to transform and operate on
+
+
+; We need to break down any set of actions to their simplest parts including:
+; - set expressions
+; - get expressions
+; - call expressions
+; - return expressions
+; - compare expressions
+; - arithmetic expressions
+
+; looking at the GCC code, pretty much everything is a set operation of some kind
+(defclass MAIN::set-expression
+  (is-a expression)
+  (slot target
+        (type INSTANCE)
+        (storage local)
+        (visibility public)
+        (default ?NONE)))
